@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="LegalEase AI — Understand legal documents in simple Urdu. Upload contracts, detect risks, get Urdu explanations instantly."/>
+  <title>LegalEase AI — اردو قانونی معاون</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ═══════════════ PAGE 1: HOME ═══════════════ -->
+<div class="page active" id="page-home">
+  <div class="gold-stripe"></div>
+  <nav>
+    <a class="nav-logo" onclick="showPage('home')">Legal<span>Ease</span> AI <small>اردو قانونی معاون</small></a>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="showPage('home')">Home</button>
+      <button class="nav-link" onclick="showPage('about')">About</button>
+      <button class="nav-link" onclick="showPage('analysis')">Demo</button>
+      <button class="nav-link" onclick="showPage('about')">Contact</button>
+      <button class="nav-cta" onclick="showPage('analysis')">Try Now →</button>
+    </div>
+  </nav>
+
+  <section style="flex:1; display:flex; flex-direction:column;">
+    <div class="hero">
+      <div class="hero-left">
+        <div class="hero-eyebrow">🇵🇰 Made for Pakistan</div>
+        <h1 class="hero-title">Simplify Your Legal Documents in <em>Urdu</em> Instantly</h1>
+        <p class="hero-urdu">اپنے قانونی دستاویزات کو آسان اردو میں سمجھیں</p>
+        <p class="hero-desc">Upload your contracts, detect risks, and get easy Urdu explanations in seconds. No lawyer needed — understand what you're signing.</p>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-num">90%</div>
+            <div class="stat-label">Pakistanis lack higher education</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Risk levels detected</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Q&A in Urdu</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="upload-card">
+        <div class="upload-card-title">Analyze Your Document</div>
+        <div class="upload-card-sub">Supports rental agreements, loan documents, contracts & more</div>
+        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+          <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt" style="display:none"/>
+          <div class="drop-icon">📄</div>
+          <div class="drop-title">Drag & Drop your file here</div>
+          <div class="drop-sub">or click to browse files</div>
+          <div class="type-chips">
+            <span class="type-chip">PDF</span>
+            <span class="type-chip">DOC</span>
+            <span class="type-chip">DOCX</span>
+            <span class="type-chip">TXT</span>
+          </div>
+        </div>
+        <button class="btn-upload" onclick="showPage('analysis')">
+          🔍 Upload & Analyze Document
+        </button>
+        <p class="upload-note">🔒 Your document is processed securely. We do not store your files.</p>
+      </div>
+    </div>
+
+    <section class="hiw-section">
+      <div class="hiw-title">How LegalEase AI Works</div>
+      <div class="hiw-sub">From confusing English legalese to simple Urdu — in 5 steps</div>
+      <div class="hiw-steps">
+        <div class="hiw-step">
+          <div class="hiw-num">1</div>
+          <div class="hiw-step-title">Upload Document</div>
+          <div class="hiw-step-desc">Upload PDF, DOC, or paste text of your contract</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">2</div>
+          <div class="hiw-step-title">AI Processing</div>
+          <div class="hiw-step-desc">Text extracted, split into clauses & stored in embeddings</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">3</div>
+          <div class="hiw-step-title">Risk Detection</div>
+          <div class="hiw-step-desc">Each clause scanned for termination, penalty & liability risks</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">4</div>
+          <div class="hiw-step-title">Urdu Summary</div>
+          <div class="hiw-step-desc">Every clause explained in plain, simple Urdu</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">5</div>
+          <div class="hiw-step-title">Report + Q&A</div>
+          <div class="hiw-step-desc">Download PDF report and ask questions in Urdu</div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <footer>
+    <div>
+      <div class="footer-logo">Legal<span>Ease</span> AI</div>
+      <div class="footer-info">اردو قانونی معاون · Urdu Legal Assistant</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="footer-hackathon">🏆 Hackathon Project 2025</div>
+      <div class="footer-info">AI-powered · RAG-based · Made in Pakistan</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="footer-info">team@legalease.ai</div>
+      <div class="footer-info">Karachi · Lahore · Islamabad</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════ PAGE 2: ANALYSIS ═══════════════ -->
+<div class="page" id="page-analysis">
+  <div class="gold-stripe"></div>
+  <nav>
+    <a class="nav-logo" onclick="showPage('home')">Legal<span>Ease</span> AI <small>اردو قانونی معاون</small></a>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('home')">Home</button>
+      <button class="nav-link" onclick="showPage('about')">About</button>
+      <button class="nav-link active">Analysis</button>
+      <button class="nav-link" onclick="showPage('qa')">Q&A</button>
+      <button class="nav-cta" onclick="showPage('report')">📄 Generate Report</button>
+    </div>
+  </nav>
+
+  <div class="analysis-topbar">
+    <div class="doc-info">
+      <div class="doc-icon">📋</div>
+      <div>
+        <div class="doc-name">Rental_Agreement_Karachi_2024.pdf</div>
+        <div class="doc-meta">Uploaded just now · 8 clauses detected · 3 flagged</div>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Search clauses…"/>
+      </div>
+      <button class="filter-btn all">All</button>
+      <button class="filter-btn red">⚠ High Risk</button>
+      <button class="filter-btn yellow">⚡ Medium</button>
+      <button class="filter-btn green">✓ Safe</button>
+    </div>
+  </div>
+
+  <div class="analysis-body">
+    <!-- LEFT: Original clauses -->
+    <div class="left-panel">
+      <div class="panel-head"><span>Original Document</span><span style="color:var(--gold)">8 Clauses</span></div>
+
+      <div class="clause-orig selected" onclick="selectClause(this)">
+        <div class="clause-num">Clause 01 · Termination</div>
+        <div class="clause-text">"The landlord reserves the right to terminate this agreement with 7 days written notice for any reason deemed appropriate by the landlord at their sole discretion."</div>
+      </div>
+      <div class="clause-orig" onclick="selectClause(this)">
+        <div class="clause-num">Clause 02 · Payment & Penalty</div>
+        <div class="clause-text">"Late payment of monthly rent shall incur a financial penalty of five percent (5%) per week on the outstanding amount, compounded on a monthly basis."</div>
+      </div>
+      <div class="clause-orig" onclick="selectClause(this)">
+        <div class="clause-num">Clause 03 · Maintenance</div>
+        <div class="clause-text">"The landlord shall remain solely responsible for all structural repairs and general maintenance where the cost thereof exceeds Pakistani Rupees Ten Thousand (PKR 10,000)."</div>
+      </div>
+      <div class="clause-orig" onclick="selectClause(this)">
+        <div class="clause-num">Clause 04 · Arbitration</div>
+        <div class="clause-text">"Any disputes arising under this agreement shall be submitted exclusively to binding arbitration. The tenant waives the right to pursue matters through civil courts."</div>
+      </div>
+      <div class="clause-orig" onclick="selectClause(this)">
+        <div class="clause-num">Clause 05 · Liability</div>
+        <div class="clause-text">"The landlord shall not be held liable for any damages to tenant's personal property arising from structural defects, leaks, or utility failures within the premises."</div>
+      </div>
+      <div class="clause-orig" onclick="selectClause(this)">
+        <div class="clause-num">Clause 06 · Rent Increase</div>
+        <div class="clause-text">"The landlord reserves the right to increase the monthly rent by up to fifteen percent (15%) annually with thirty (30) days advance written notice."</div>
+      </div>
+      <div class="clause-orig" onclick="selectClause(this)">
+        <div class="clause-num">Clause 07 · Subletting</div>
+        <div class="clause-text">"The tenant is strictly prohibited from subletting or sharing the premises with any third party without prior written consent from the landlord."</div>
+      </div>
+      <div class="clause-orig" onclick="selectClause(this)">
+        <div class="clause-num">Clause 08 · Security Deposit</div>
+        <div class="clause-text">"A security deposit equivalent to two months' rent shall be held by the landlord and returned within 60 days of vacating, subject to deductions for damages."</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Urdu Analysis -->
+    <div class="right-panel">
+      <div class="panel-head"><span>Urdu Analysis & Risk</span><span onclick="showPage('qa')" style="color:var(--gold);cursor:pointer;font-weight:600">Ask a Question →</span></div>
+
+      <div class="analysis-card">
+        <div class="ac-header red">
+          <span class="risk-icon">🔴</span>
+          <span class="clause-type-label">Termination Clause</span>
+          <span class="risk-pill red">⚠ High Risk</span>
+        </div>
+        <div class="ac-body">
+          <div class="urdu-explanation">
+            <div class="urdu-tag">Urdu Explanation — اردو وضاحت</div>
+            <div class="urdu-exp-text">مالک مکان بغیر کسی خاص وجہ کے صرف 7 دن کے نوٹس پر آپ کو گھر خالی کروا سکتا ہے۔ یہ آپ کے لیے انتہائی نقصان دہ ہے۔</div>
+          </div>
+          <div class="risk-tooltip">⚠️ <strong>Why it's risky:</strong> Landlord can evict you with only 7 days notice — no reason needed. Negotiate for at least 60 days or add specific conditions.</div>
+        </div>
+      </div>
+
+      <div class="analysis-card">
+        <div class="ac-header yellow">
+          <span class="risk-icon">🟡</span>
+          <span class="clause-type-label">Penalty Clause</span>
+          <span class="risk-pill yellow">⚡ Medium Risk</span>
+        </div>
+        <div class="ac-body">
+          <div class="urdu-explanation">
+            <div class="urdu-tag">Urdu Explanation — اردو وضاحت</div>
+            <div class="urdu-exp-text">اگر کرایہ دیر سے دیا تو ہر ہفتے 5٪ جرمانہ لگے گا جو ہر مہینے بڑھتا رہے گا۔ وقت پر ادائیگی یقینی بنائیں۔</div>
+          </div>
+          <div class="risk-tooltip">⚡ <strong>Watch out:</strong> 5% weekly penalty compounds monthly. A single late month could add significant extra costs.</div>
+        </div>
+      </div>
+
+      <div class="analysis-card">
+        <div class="ac-header green">
+          <span class="risk-icon">🟢</span>
+          <span class="clause-type-label">Maintenance Clause</span>
+          <span class="risk-pill green">✓ Safe</span>
+        </div>
+        <div class="ac-body">
+          <div class="urdu-explanation">
+            <div class="urdu-tag">Urdu Explanation — اردو وضاحت</div>
+            <div class="urdu-exp-text">10,000 روپے سے اوپر کی تمام مرمت مالک مکان کی ذمہ داری ہے۔ یہ آپ کے لیے فائدہ مند ہے۔</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="analysis-card">
+        <div class="ac-header red">
+          <span class="risk-icon">🔴</span>
+          <span class="clause-type-label">Arbitration Clause</span>
+          <span class="risk-pill red">⚠ High Risk</span>
+        </div>
+        <div class="ac-body">
+          <div class="urdu-explanation">
+            <div class="urdu-tag">Urdu Explanation — اردو وضاحت</div>
+            <div class="urdu-exp-text">اگر کوئی تنازعہ ہو تو آپ عدالت نہیں جا سکتے — صرف ثالثی (آربٹریشن) کا راستہ ہے۔ یہ مالک مکان کے حق میں ہے۔</div>
+          </div>
+          <div class="risk-tooltip">⚠️ You're giving up your right to civil court. Arbitration often favors the party with more resources.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-clause-row">
+    <button class="btn-clause">← Previous</button>
+    <button class="btn-clause" onclick="showPage('qa')">💬 Ask in Urdu</button>
+    <button class="btn-clause primary" onclick="showPage('report')">Generate Report →</button>
+    <button class="btn-clause">Next →</button>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE 3: Q&A ═══════════════ -->
+<div class="page" id="page-qa">
+  <div class="gold-stripe"></div>
+  <nav>
+    <a class="nav-logo" onclick="showPage('home')">Legal<span>Ease</span> AI <small>اردو قانونی معاون</small></a>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('home')">Home</button>
+      <button class="nav-link" onclick="showPage('analysis')">← Analysis</button>
+      <button class="nav-link active">Q&A</button>
+      <button class="nav-cta" onclick="showPage('report')">📄 Report</button>
+    </div>
+  </nav>
+
+  <div class="qa-layout">
+    <div class="qa-sidebar">
+      <div>
+        <div class="qa-sidebar-title">Active Document</div>
+        <div class="qa-doc-card">
+          <div class="qa-doc-name">Rental_Agreement_Karachi_2024.pdf</div>
+          <div class="qa-doc-stat">8 clauses · 3 high risk · 2 medium</div>
+        </div>
+      </div>
+      <div>
+        <div class="qa-suggestions-title">Suggested Questions</div>
+        <div class="qa-suggestion" onclick="fillQuestion(this)">اگر میں نے کرایہ دیر سے دیا تو کیا ہوگا؟</div>
+        <div class="qa-suggestion" onclick="fillQuestion(this)">کیا مالک مکان مجھے بغیر وجہ نکال سکتا ہے؟</div>
+        <div class="qa-suggestion" onclick="fillQuestion(this)">ڈپازٹ واپس کب ملے گا؟</div>
+        <div class="qa-suggestion" onclick="fillQuestion(this)">کیا یہ معاہدہ میرے لیے محفوظ ہے؟</div>
+        <div class="qa-suggestion" onclick="fillQuestion(this)">سب سے خطرناک شق کونسی ہے؟</div>
+      </div>
+    </div>
+
+    <div class="qa-main">
+      <div class="qa-header">
+        <div>
+          <div class="qa-header-title">Ask About Your Document</div>
+          <div class="qa-header-sub">Ask any question in Urdu or English — AI answers from your document only</div>
+        </div>
+        <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:16px;color:var(--gold);direction:rtl;">اردو میں سوال پوچھیں</div>
+      </div>
+
+      <div class="qa-messages" id="qa-messages">
+        <div class="msg-wrap user">
+          <div class="msg-avatar user">👤</div>
+          <div class="msg-bubble user">اگر میں نے کرایہ دیر سے دیا تو کیا ہوگا؟</div>
+        </div>
+        <div class="msg-wrap">
+          <div class="msg-avatar ai">AI</div>
+          <div class="msg-bubble ai">
+            <strong>Late Payment Penalty (Clause 2):</strong> If you pay rent late, a 5% weekly penalty will be charged on the outstanding amount, compounded monthly.
+            <div class="urdu-reply">اگر آپ نے کرایہ وقت پر نہیں دیا تو ہر ہفتے 5٪ جرمانہ لگے گا جو ہر مہینے بڑھتا رہے گا۔</div>
+            <div class="related-clause">📎 Based on: Clause 02 — Payment & Penalty</div>
+          </div>
+        </div>
+        <div class="msg-wrap user">
+          <div class="msg-avatar user">👤</div>
+          <div class="msg-bubble user">کیا مالک مکان مجھے بغیر وجہ نکال سکتا ہے؟</div>
+        </div>
+        <div class="msg-wrap">
+          <div class="msg-avatar ai">AI</div>
+          <div class="msg-bubble ai">
+            <strong>⚠ Yes — this is a High Risk clause.</strong> The landlord can terminate your agreement with only 7 days written notice, for any reason they choose.
+            <div class="urdu-reply">ہاں، مالک مکان صرف 7 دن کے نوٹس پر، بغیر کوئی وجہ بتائے، آپ کو گھر خالی کروا سکتا ہے۔ یہ شق آپ کے لیے انتہائی نقصان دہ ہے۔</div>
+            <div class="related-clause">📎 Based on: Clause 01 — Termination</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-input-area">
+        <div class="qa-input-box">
+          <textarea class="qa-textarea" id="qa-input" rows="2" placeholder="Type your question in Urdu or English… اردو یا انگریزی میں سوال لکھیں"></textarea>
+          <div class="qa-actions">
+            <button class="btn-qa-send" onclick="sendMessage()">➤</button>
+            <button class="btn-qa-mic" title="Speak in Urdu">🎤</button>
+          </div>
+        </div>
+        <div class="qa-hint">AI answers are based on your uploaded document only · Powered by RAG + LLM</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE 4: REPORT ═══════════════ -->
+<div class="page" id="page-report">
+  <div class="gold-stripe"></div>
+  <nav>
+    <a class="nav-logo" onclick="showPage('home')">Legal<span>Ease</span> AI <small>اردو قانونی معاون</small></a>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('home')">Home</button>
+      <button class="nav-link" onclick="showPage('analysis')">← Analysis</button>
+      <button class="nav-link" onclick="showPage('qa')">Q&A</button>
+      <button class="nav-link active">Report</button>
+    </div>
+  </nav>
+
+  <div class="report-body">
+    <div class="report-header-card">
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Analysis Report</div>
+        <div class="report-doc-title">Rental Agreement — Karachi 2024</div>
+        <div class="report-meta">Analyzed on <span>20 February 2026</span> · <span>8 clauses</span> · Processed via LegalEase AI</div>
+      </div>
+      <button class="btn-download">📄 Download PDF Report</button>
+    </div>
+
+    <div class="insights-row">
+      <div class="insight-card"><div class="insight-num neutral">8</div><div class="insight-label">Total Clauses</div></div>
+      <div class="insight-card"><div class="insight-num red">3</div><div class="insight-label">High Risk ⚠</div></div>
+      <div class="insight-card"><div class="insight-num yellow">2</div><div class="insight-label">Medium Risk ⚡</div></div>
+      <div class="insight-card"><div class="insight-num green">3</div><div class="insight-label">Safe ✓</div></div>
+    </div>
+
+    <div class="report-section-title">Clause Summary Table</div>
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Clause Type</th>
+          <th>Urdu Explanation — اردو وضاحت</th>
+          <th>Risk Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>01</td><td>Termination</td><td class="urdu-cell">مالک مکان 7 دن کے نوٹس پر بغیر وجہ نکال سکتا ہے</td><td><span class="risk-badge-sm red">⚠ High Risk</span></td></tr>
+        <tr><td>02</td><td>Penalty</td><td class="urdu-cell">دیر سے ادائیگی پر ہفتہ وار 5٪ جرمانہ</td><td><span class="risk-badge-sm yellow">⚡ Medium</span></td></tr>
+        <tr><td>03</td><td>Maintenance</td><td class="urdu-cell">10,000 روپے سے اوپر مرمت مالک کی ذمہ داری</td><td><span class="risk-badge-sm green">✓ Safe</span></td></tr>
+        <tr><td>04</td><td>Arbitration</td><td class="urdu-cell">عدالت جانے کا حق ختم — صرف ثالثی</td><td><span class="risk-badge-sm red">⚠ High Risk</span></td></tr>
+        <tr><td>05</td><td>Liability</td><td class="urdu-cell">نقصان کی صورت میں مالک ذمہ دار نہیں</td><td><span class="risk-badge-sm red">⚠ High Risk</span></td></tr>
+        <tr><td>06</td><td>Rent Increase</td><td class="urdu-cell">سالانہ 15٪ تک کرایہ بڑھ سکتا ہے</td><td><span class="risk-badge-sm yellow">⚡ Medium</span></td></tr>
+        <tr><td>07</td><td>Subletting</td><td class="urdu-cell">کسی اور کو گھر نہیں دے سکتے بغیر اجازت</td><td><span class="risk-badge-sm green">✓ Safe</span></td></tr>
+        <tr><td>08</td><td>Security Deposit</td><td class="urdu-cell">خالی کرنے کے 60 دن بعد ڈپازٹ واپس ملے گا</td><td><span class="risk-badge-sm green">✓ Safe</span></td></tr>
+      </tbody>
+    </table>
+
+    <div style="text-align:center; padding-bottom: 40px;">
+      <button class="btn-download" style="display:inline-flex;">📄 Download Full PDF Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE 5: ABOUT ═══════════════ -->
+<div class="page" id="page-about">
+  <div class="gold-stripe"></div>
+  <nav>
+    <a class="nav-logo" onclick="showPage('home')">Legal<span>Ease</span> AI <small>اردو قانونی معاون</small></a>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('home')">Home</button>
+      <button class="nav-link active">About</button>
+      <button class="nav-link" onclick="showPage('analysis')">Demo</button>
+      <button class="nav-cta" onclick="showPage('home')">Try Now →</button>
+    </div>
+  </nav>
+
+  <div class="about-hero">
+    <div class="about-hero-title">Why <span>LegalEase</span> AI?</div>
+    <div class="about-hero-sub">Over 90% of Pakistanis lack higher education. Legal documents in English are a barrier that puts ordinary people at risk every day.</div>
+    <div class="about-hero-urdu">قانونی دستاویزات کو سمجھنا اب مشکل نہیں — اردو میں آسان وضاحت</div>
+  </div>
+
+  <div class="about-content">
+    <div class="report-section-title" style="margin-bottom:28px;">Why LegalEase AI Will Work</div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">📋</div>
+        <div class="why-title">Complex English Contracts</div>
+        <div class="why-desc">Most contracts in Pakistan are written in complex legal English that ordinary people cannot understand, leaving them vulnerable to unfair terms.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💰</div>
+        <div class="why-title">Lawyers Are Expensive</div>
+        <div class="why-desc">Hiring a lawyer to review a rental agreement is out of reach for most Pakistanis. LegalEase AI bridges this gap — not replacing lawyers, but empowering people.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🇵🇰</div>
+        <div class="why-title">Urdu Localization</div>
+        <div class="why-desc">AI explanations in plain, culturally appropriate Urdu — not just translation, but contextual simplification that makes sense to everyday users.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🛡️</div>
+        <div class="why-title">Risk Detection</div>
+        <div class="why-desc">Automatically flags termination, penalty, liability, and arbitration clauses. Red/yellow/green system makes risks instantly visible at a glance.</div>
+      </div>
+    </div>
+
+    <div class="report-section-title" style="margin-bottom:28px;">How It Works — Technical</div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:32px;margin-bottom:40px;">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;text-align:center;">
+        <div><div style="font-size:28px;margin-bottom:10px;">📄</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Upload</div><div style="font-size:11px;color:var(--muted);">PDF/DOC via pdfplumber or PyPDF2</div></div>
+        <div><div style="font-size:28px;margin-bottom:10px;">✂️</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Chunking</div><div style="font-size:11px;color:var(--muted);">RAG embeddings stored in FAISS vector DB</div></div>
+        <div><div style="font-size:28px;margin-bottom:10px;">🔍</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Risk Scan</div><div style="font-size:11px;color:var(--muted);">Keywords + patterns for each risk type</div></div>
+        <div><div style="font-size:28px;margin-bottom:10px;">🌐</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Urdu AI</div><div style="font-size:11px;color:var(--muted);">LLM prompts for simple Urdu explanation</div></div>
+        <div><div style="font-size:28px;margin-bottom:10px;">📊</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Report</div><div style="font-size:11px;color:var(--muted);">PDF with risk summary + Urdu clauses</div></div>
+      </div>
+    </div>
+
+    <div class="report-section-title" style="margin-bottom:28px;">Team</div>
+    <div class="team-grid" style="margin-bottom:40px;">
+      <div class="team-card">
+        <div class="team-avatar">A</div>
+        <div class="team-name">Team Member 1</div>
+        <div class="team-role">AI & Backend Engineer</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">B</div>
+        <div class="team-name">Team Member 2</div>
+        <div class="team-role">Frontend & UI/UX Designer</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">C</div>
+        <div class="team-name">Team Member 3</div>
+        <div class="team-role">NLP & Urdu Language Expert</div>
+      </div>
+    </div>
+
+    <div class="hackathon-banner">
+      <div class="hackathon-label">🏆 Competition Entry</div>
+      <div class="hackathon-title">Hackathon 2025 — AI for Pakistan</div>
+      <div class="hackathon-desc">Built with Python · FastAPI · FAISS · LangChain · Vanilla JS · Practical AI for real Pakistani problems</div>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <div class="footer-logo">Legal<span>Ease</span> AI</div>
+      <div class="footer-info">اردو قانونی معاون · Urdu Legal Assistant</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="footer-hackathon">🏆 Hackathon Project 2025</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="footer-info">team@legalease.ai</div>
+    </div>
+  </footer>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
