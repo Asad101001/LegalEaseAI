@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="LegalEase AI — Understand legal documents in simple Urdu. Upload contracts, detect risks, get Urdu explanations instantly."/>
+  <meta name="description" content="LegalEase AI — Understand legal documents in simple Urdu. Upload contracts, detect risks, get Urdu explanations instantly. Made for Pakistan."/>
   <title>LegalEase AI — اردو قانونی معاون</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-<!-- ═══════════════ PAGE 1: HOME ═══════════════ -->
+<!-- ═══════════════════════════ PAGE 1: HOME ════════════════════════════ -->
 <div class="page active" id="page-home">
   <div class="gold-stripe"></div>
   <nav>
@@ -17,43 +17,43 @@
     <div class="nav-links">
       <button class="nav-link active" onclick="showPage('home')">Home</button>
       <button class="nav-link" onclick="showPage('about')">About</button>
-      <button class="nav-link" onclick="showPage('analysis')">Demo</button>
-      <button class="nav-link" onclick="showPage('about')">Contact</button>
-      <button class="nav-cta" onclick="showPage('analysis')">Try Now →</button>
+      <button class="nav-link" onclick="showPage('analysis')">Live Demo</button>
+      <button class="nav-link" onclick="showPage('qa')">Q&amp;A</button>
+      <button class="nav-cta" onclick="showPage('home'); document.getElementById('drop-zone').scrollIntoView({behavior:'smooth'})">Try Now →</button>
     </div>
+    <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
   </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <button class="nav-link" onclick="showPage('home')">Home</button>
+    <button class="nav-link" onclick="showPage('about')">About</button>
+    <button class="nav-link" onclick="showPage('analysis')">Live Demo</button>
+    <button class="nav-link" onclick="showPage('qa')">Q&amp;A</button>
+    <button class="nav-cta" onclick="showPage('analysis')">Try Now →</button>
+  </div>
 
-  <section style="flex:1; display:flex; flex-direction:column;">
+  <section style="flex:1;display:flex;flex-direction:column;">
     <div class="hero">
       <div class="hero-left">
-        <div class="hero-eyebrow">🇵🇰 Made for Pakistan</div>
-        <h1 class="hero-title">Simplify Your Legal Documents in <em>Urdu</em> Instantly</h1>
-        <p class="hero-urdu">اپنے قانونی دستاویزات کو آسان اردو میں سمجھیں</p>
-        <p class="hero-desc">Upload your contracts, detect risks, and get easy Urdu explanations in seconds. No lawyer needed — understand what you're signing.</p>
+        <div class="hero-eyebrow">🇵🇰 Built for Pakistan</div>
+        <h1 class="hero-title">Understand Legal Documents in <em>Urdu</em> — Instantly</h1>
+        <p class="hero-urdu">اپنے قانونی دستاویزات کو آسان اردو میں سمجھیں — بغیر وکیل کے</p>
+        <p class="hero-desc">Upload your contract, rental agreement, or loan document. Our AI detects risky clauses, explains them in plain Urdu, and answers your questions — all in seconds.</p>
         <div class="hero-stats">
-          <div class="stat">
-            <div class="stat-num">90%</div>
-            <div class="stat-label">Pakistanis lack higher education</div>
-          </div>
-          <div class="stat">
-            <div class="stat-num">3</div>
-            <div class="stat-label">Risk levels detected</div>
-          </div>
-          <div class="stat">
-            <div class="stat-num">∞</div>
-            <div class="stat-label">Q&A in Urdu</div>
-          </div>
+          <div class="stat"><div class="stat-num">90%</div><div class="stat-label">Pakistanis without higher education</div></div>
+          <div class="stat"><div class="stat-num">3</div><div class="stat-label">Risk levels: High · Medium · Safe</div></div>
+          <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Questions answered in Urdu</div></div>
         </div>
       </div>
 
       <div class="upload-card">
         <div class="upload-card-title">Analyze Your Document</div>
-        <div class="upload-card-sub">Supports rental agreements, loan documents, contracts & more</div>
-        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+        <div class="upload-card-sub">Rental agreements · Loan documents · Employment contracts · Terms &amp; Conditions</div>
+
+        <div class="drop-zone" id="drop-zone">
           <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt" style="display:none"/>
           <div class="drop-icon">📄</div>
-          <div class="drop-title">Drag & Drop your file here</div>
-          <div class="drop-sub">or click to browse files</div>
+          <div class="drop-title">Drag &amp; Drop your file here</div>
+          <div class="drop-sub">or click to browse — PDF, DOC, DOCX, TXT</div>
           <div class="type-chips">
             <span class="type-chip">PDF</span>
             <span class="type-chip">DOC</span>
@@ -61,41 +61,48 @@
             <span class="type-chip">TXT</span>
           </div>
         </div>
-        <button class="btn-upload" onclick="showPage('analysis')">
-          🔍 Upload & Analyze Document
+
+        <button class="btn-upload" id="upload-btn" onclick="document.getElementById('file-input').click()">
+          🔍 Upload &amp; Analyze Document
         </button>
-        <p class="upload-note">🔒 Your document is processed securely. We do not store your files.</p>
+        <p class="upload-note">🔒 Processed securely · Files are never stored · Private by design</p>
+
+        <div style="text-align:center;margin-top:16px;">
+          <button onclick="showPage('analysis')" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;">
+            or view live demo with sample document →
+          </button>
+        </div>
       </div>
     </div>
 
     <section class="hiw-section">
       <div class="hiw-title">How LegalEase AI Works</div>
-      <div class="hiw-sub">From confusing English legalese to simple Urdu — in 5 steps</div>
+      <div class="hiw-sub">From confusing English legalese to clear Urdu — in 5 steps</div>
       <div class="hiw-steps">
         <div class="hiw-step">
           <div class="hiw-num">1</div>
           <div class="hiw-step-title">Upload Document</div>
-          <div class="hiw-step-desc">Upload PDF, DOC, or paste text of your contract</div>
+          <div class="hiw-step-desc">Upload PDF, DOC, or paste text of your contract or agreement</div>
         </div>
         <div class="hiw-step">
           <div class="hiw-num">2</div>
           <div class="hiw-step-title">AI Processing</div>
-          <div class="hiw-step-desc">Text extracted, split into clauses & stored in embeddings</div>
+          <div class="hiw-step-desc">Text extracted via pdfplumber, split into clauses, stored in FAISS embeddings</div>
         </div>
         <div class="hiw-step">
           <div class="hiw-num">3</div>
           <div class="hiw-step-title">Risk Detection</div>
-          <div class="hiw-step-desc">Each clause scanned for termination, penalty & liability risks</div>
+          <div class="hiw-step-desc">Each clause scanned for termination, penalty, liability &amp; arbitration risks</div>
         </div>
         <div class="hiw-step">
           <div class="hiw-num">4</div>
-          <div class="hiw-step-title">Urdu Summary</div>
-          <div class="hiw-step-desc">Every clause explained in plain, simple Urdu</div>
+          <div class="hiw-step-title">Urdu Explanation</div>
+          <div class="hiw-step-desc">Every clause explained in plain, culturally appropriate Urdu via LLM</div>
         </div>
         <div class="hiw-step">
           <div class="hiw-num">5</div>
-          <div class="hiw-step-title">Report + Q&A</div>
-          <div class="hiw-step-desc">Download PDF report and ask questions in Urdu</div>
+          <div class="hiw-step-title">Report + Q&amp;A</div>
+          <div class="hiw-step-desc">Download a full PDF report and ask unlimited questions in Urdu</div>
         </div>
       </div>
     </section>
@@ -107,8 +114,8 @@
       <div class="footer-info">اردو قانونی معاون · Urdu Legal Assistant</div>
     </div>
     <div style="text-align:center;">
-      <div class="footer-hackathon">🏆 Hackathon Project 2025</div>
-      <div class="footer-info">AI-powered · RAG-based · Made in Pakistan</div>
+      <div class="footer-hackathon">🏆 Hackathon 2025 — AI for Pakistan</div>
+      <div class="footer-info">RAG · FAISS · LangChain · FastAPI · Vanilla JS</div>
     </div>
     <div style="text-align:right;">
       <div class="footer-info">team@legalease.ai</div>
@@ -117,7 +124,7 @@
   </footer>
 </div>
 
-<!-- ═══════════════ PAGE 2: ANALYSIS ═══════════════ -->
+<!-- ═══════════════════════════ PAGE 2: ANALYSIS ════════════════════════ -->
 <div class="page" id="page-analysis">
   <div class="gold-stripe"></div>
   <nav>
@@ -126,144 +133,62 @@
       <button class="nav-link" onclick="showPage('home')">Home</button>
       <button class="nav-link" onclick="showPage('about')">About</button>
       <button class="nav-link active">Analysis</button>
-      <button class="nav-link" onclick="showPage('qa')">Q&A</button>
+      <button class="nav-link" onclick="showPage('qa')">Q&amp;A</button>
       <button class="nav-cta" onclick="showPage('report')">📄 Generate Report</button>
     </div>
+    <button class="hamburger" id="hamburger-btn-2" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
   </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <button class="nav-link" onclick="showPage('home')">Home</button>
+    <button class="nav-link" onclick="showPage('about')">About</button>
+    <button class="nav-link" onclick="showPage('qa')">Q&amp;A</button>
+    <button class="nav-cta" onclick="showPage('report')">📄 Report</button>
+  </div>
 
   <div class="analysis-topbar">
     <div class="doc-info">
       <div class="doc-icon">📋</div>
       <div>
-        <div class="doc-name">Rental_Agreement_Karachi_2024.pdf</div>
-        <div class="doc-meta">Uploaded just now · 8 clauses detected · 3 flagged</div>
+        <div class="doc-name" id="doc-name-display">Rental_Agreement_Karachi_2024.pdf</div>
+        <div class="doc-meta" id="doc-meta-display">8 clauses detected · 3 high risk · 2 medium risk</div>
       </div>
     </div>
     <div class="filter-row">
       <div class="search-box">
         <span>🔍</span>
-        <input type="text" placeholder="Search clauses…"/>
+        <input type="text" id="clause-search" placeholder="Search clauses…"/>
       </div>
-      <button class="filter-btn all">All</button>
-      <button class="filter-btn red">⚠ High Risk</button>
-      <button class="filter-btn yellow">⚡ Medium</button>
-      <button class="filter-btn green">✓ Safe</button>
+      <button class="filter-btn all on" id="filter-all"    onclick="setActiveFilter('all')">All</button>
+      <button class="filter-btn high"   id="filter-high"   onclick="setActiveFilter('high')">⚠ High</button>
+      <button class="filter-btn medium" id="filter-medium" onclick="setActiveFilter('medium')">⚡ Medium</button>
+      <button class="filter-btn safe"   id="filter-safe"   onclick="setActiveFilter('safe')">✓ Safe</button>
     </div>
   </div>
 
   <div class="analysis-body">
-    <!-- LEFT: Original clauses -->
     <div class="left-panel">
-      <div class="panel-head"><span>Original Document</span><span style="color:var(--gold)">8 Clauses</span></div>
-
-      <div class="clause-orig selected" onclick="selectClause(this)">
-        <div class="clause-num">Clause 01 · Termination</div>
-        <div class="clause-text">"The landlord reserves the right to terminate this agreement with 7 days written notice for any reason deemed appropriate by the landlord at their sole discretion."</div>
+      <div class="panel-head">
+        <span>Original Clauses</span>
+        <span style="color:var(--gold);cursor:pointer;" onclick="showPage('qa')">Ask Q&amp;A →</span>
       </div>
-      <div class="clause-orig" onclick="selectClause(this)">
-        <div class="clause-num">Clause 02 · Payment & Penalty</div>
-        <div class="clause-text">"Late payment of monthly rent shall incur a financial penalty of five percent (5%) per week on the outstanding amount, compounded on a monthly basis."</div>
-      </div>
-      <div class="clause-orig" onclick="selectClause(this)">
-        <div class="clause-num">Clause 03 · Maintenance</div>
-        <div class="clause-text">"The landlord shall remain solely responsible for all structural repairs and general maintenance where the cost thereof exceeds Pakistani Rupees Ten Thousand (PKR 10,000)."</div>
-      </div>
-      <div class="clause-orig" onclick="selectClause(this)">
-        <div class="clause-num">Clause 04 · Arbitration</div>
-        <div class="clause-text">"Any disputes arising under this agreement shall be submitted exclusively to binding arbitration. The tenant waives the right to pursue matters through civil courts."</div>
-      </div>
-      <div class="clause-orig" onclick="selectClause(this)">
-        <div class="clause-num">Clause 05 · Liability</div>
-        <div class="clause-text">"The landlord shall not be held liable for any damages to tenant's personal property arising from structural defects, leaks, or utility failures within the premises."</div>
-      </div>
-      <div class="clause-orig" onclick="selectClause(this)">
-        <div class="clause-num">Clause 06 · Rent Increase</div>
-        <div class="clause-text">"The landlord reserves the right to increase the monthly rent by up to fifteen percent (15%) annually with thirty (30) days advance written notice."</div>
-      </div>
-      <div class="clause-orig" onclick="selectClause(this)">
-        <div class="clause-num">Clause 07 · Subletting</div>
-        <div class="clause-text">"The tenant is strictly prohibited from subletting or sharing the premises with any third party without prior written consent from the landlord."</div>
-      </div>
-      <div class="clause-orig" onclick="selectClause(this)">
-        <div class="clause-num">Clause 08 · Security Deposit</div>
-        <div class="clause-text">"A security deposit equivalent to two months' rent shall be held by the landlord and returned within 60 days of vacating, subject to deductions for damages."</div>
-      </div>
+      <div id="clause-list"><!-- rendered by JS --></div>
     </div>
-
-    <!-- RIGHT: Urdu Analysis -->
     <div class="right-panel">
-      <div class="panel-head"><span>Urdu Analysis & Risk</span><span onclick="showPage('qa')" style="color:var(--gold);cursor:pointer;font-weight:600">Ask a Question →</span></div>
-
-      <div class="analysis-card">
-        <div class="ac-header red">
-          <span class="risk-icon">🔴</span>
-          <span class="clause-type-label">Termination Clause</span>
-          <span class="risk-pill red">⚠ High Risk</span>
-        </div>
-        <div class="ac-body">
-          <div class="urdu-explanation">
-            <div class="urdu-tag">Urdu Explanation — اردو وضاحت</div>
-            <div class="urdu-exp-text">مالک مکان بغیر کسی خاص وجہ کے صرف 7 دن کے نوٹس پر آپ کو گھر خالی کروا سکتا ہے۔ یہ آپ کے لیے انتہائی نقصان دہ ہے۔</div>
-          </div>
-          <div class="risk-tooltip">⚠️ <strong>Why it's risky:</strong> Landlord can evict you with only 7 days notice — no reason needed. Negotiate for at least 60 days or add specific conditions.</div>
-        </div>
-      </div>
-
-      <div class="analysis-card">
-        <div class="ac-header yellow">
-          <span class="risk-icon">🟡</span>
-          <span class="clause-type-label">Penalty Clause</span>
-          <span class="risk-pill yellow">⚡ Medium Risk</span>
-        </div>
-        <div class="ac-body">
-          <div class="urdu-explanation">
-            <div class="urdu-tag">Urdu Explanation — اردو وضاحت</div>
-            <div class="urdu-exp-text">اگر کرایہ دیر سے دیا تو ہر ہفتے 5٪ جرمانہ لگے گا جو ہر مہینے بڑھتا رہے گا۔ وقت پر ادائیگی یقینی بنائیں۔</div>
-          </div>
-          <div class="risk-tooltip">⚡ <strong>Watch out:</strong> 5% weekly penalty compounds monthly. A single late month could add significant extra costs.</div>
-        </div>
-      </div>
-
-      <div class="analysis-card">
-        <div class="ac-header green">
-          <span class="risk-icon">🟢</span>
-          <span class="clause-type-label">Maintenance Clause</span>
-          <span class="risk-pill green">✓ Safe</span>
-        </div>
-        <div class="ac-body">
-          <div class="urdu-explanation">
-            <div class="urdu-tag">Urdu Explanation — اردو وضاحت</div>
-            <div class="urdu-exp-text">10,000 روپے سے اوپر کی تمام مرمت مالک مکان کی ذمہ داری ہے۔ یہ آپ کے لیے فائدہ مند ہے۔</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="analysis-card">
-        <div class="ac-header red">
-          <span class="risk-icon">🔴</span>
-          <span class="clause-type-label">Arbitration Clause</span>
-          <span class="risk-pill red">⚠ High Risk</span>
-        </div>
-        <div class="ac-body">
-          <div class="urdu-explanation">
-            <div class="urdu-tag">Urdu Explanation — اردو وضاحت</div>
-            <div class="urdu-exp-text">اگر کوئی تنازعہ ہو تو آپ عدالت نہیں جا سکتے — صرف ثالثی (آربٹریشن) کا راستہ ہے۔ یہ مالک مکان کے حق میں ہے۔</div>
-          </div>
-          <div class="risk-tooltip">⚠️ You're giving up your right to civil court. Arbitration often favors the party with more resources.</div>
-        </div>
-      </div>
+      <div class="panel-head"><span>Urdu Analysis &amp; Risk</span></div>
+      <div id="analysis-cards"><!-- rendered by JS --></div>
     </div>
   </div>
 
   <div class="nav-clause-row">
-    <button class="btn-clause">← Previous</button>
+    <button class="btn-clause" onclick="navigateClause(-1)">← Previous</button>
+    <button class="btn-clause" onclick="showPage('home')">📄 New Document</button>
     <button class="btn-clause" onclick="showPage('qa')">💬 Ask in Urdu</button>
     <button class="btn-clause primary" onclick="showPage('report')">Generate Report →</button>
-    <button class="btn-clause">Next →</button>
+    <button class="btn-clause" onclick="navigateClause(1)">Next →</button>
   </div>
 </div>
 
-<!-- ═══════════════ PAGE 3: Q&A ═══════════════ -->
+<!-- ═══════════════════════════ PAGE 3: Q&A ════════════════════════════ -->
 <div class="page" id="page-qa">
   <div class="gold-stripe"></div>
   <nav>
@@ -271,9 +196,10 @@
     <div class="nav-links">
       <button class="nav-link" onclick="showPage('home')">Home</button>
       <button class="nav-link" onclick="showPage('analysis')">← Analysis</button>
-      <button class="nav-link active">Q&A</button>
+      <button class="nav-link active">Q&amp;A</button>
       <button class="nav-cta" onclick="showPage('report')">📄 Report</button>
     </div>
+    <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
   </nav>
 
   <div class="qa-layout">
@@ -282,7 +208,7 @@
         <div class="qa-sidebar-title">Active Document</div>
         <div class="qa-doc-card">
           <div class="qa-doc-name">Rental_Agreement_Karachi_2024.pdf</div>
-          <div class="qa-doc-stat">8 clauses · 3 high risk · 2 medium</div>
+          <div class="qa-doc-stat">8 clauses · 3 high risk · 2 medium risk</div>
         </div>
       </div>
       <div>
@@ -290,8 +216,13 @@
         <div class="qa-suggestion" onclick="fillQuestion(this)">اگر میں نے کرایہ دیر سے دیا تو کیا ہوگا؟</div>
         <div class="qa-suggestion" onclick="fillQuestion(this)">کیا مالک مکان مجھے بغیر وجہ نکال سکتا ہے؟</div>
         <div class="qa-suggestion" onclick="fillQuestion(this)">ڈپازٹ واپس کب ملے گا؟</div>
-        <div class="qa-suggestion" onclick="fillQuestion(this)">کیا یہ معاہدہ میرے لیے محفوظ ہے؟</div>
         <div class="qa-suggestion" onclick="fillQuestion(this)">سب سے خطرناک شق کونسی ہے؟</div>
+        <div class="qa-suggestion" onclick="fillQuestion(this)">کیا یہ معاہدہ میرے لیے محفوظ ہے؟</div>
+      </div>
+      <div style="margin-top:auto;">
+        <button onclick="showPage('report')" style="width:100%;background:var(--gold);color:var(--ink);border:none;padding:12px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;">
+          📄 Generate Report
+        </button>
       </div>
     </div>
 
@@ -299,9 +230,9 @@
       <div class="qa-header">
         <div>
           <div class="qa-header-title">Ask About Your Document</div>
-          <div class="qa-header-sub">Ask any question in Urdu or English — AI answers from your document only</div>
+          <div class="qa-header-sub">Urdu or English — AI answers from your document only via RAG</div>
         </div>
-        <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:16px;color:var(--gold);direction:rtl;">اردو میں سوال پوچھیں</div>
+        <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:15px;color:var(--gold);direction:rtl;">اردو میں سوال پوچھیں</div>
       </div>
 
       <div class="qa-messages" id="qa-messages">
@@ -312,9 +243,9 @@
         <div class="msg-wrap">
           <div class="msg-avatar ai">AI</div>
           <div class="msg-bubble ai">
-            <strong>Late Payment Penalty (Clause 2):</strong> If you pay rent late, a 5% weekly penalty will be charged on the outstanding amount, compounded monthly.
-            <div class="urdu-reply">اگر آپ نے کرایہ وقت پر نہیں دیا تو ہر ہفتے 5٪ جرمانہ لگے گا جو ہر مہینے بڑھتا رہے گا۔</div>
-            <div class="related-clause">📎 Based on: Clause 02 — Payment & Penalty</div>
+            <strong>Late Payment Penalty (Clause 2):</strong> If you pay rent late, a 5% weekly penalty will be charged on the outstanding amount, compounded monthly. One missed month could cost you 20%+ in penalties.
+            <div class="urdu-reply">اگر آپ نے کرایہ وقت پر نہیں دیا تو ہر ہفتے 5٪ جرمانہ لگے گا جو ہر مہینے بڑھتا رہے گا۔ ادائیگی میں ایک ماہ کی تاخیر بھی بڑی رقم بن سکتی ہے — ہمیشہ وقت پر ادائیگی کریں۔</div>
+            <div class="related-clause">📎 Based on: Clause 02 — Payment &amp; Penalty</div>
           </div>
         </div>
         <div class="msg-wrap user">
@@ -324,8 +255,8 @@
         <div class="msg-wrap">
           <div class="msg-avatar ai">AI</div>
           <div class="msg-bubble ai">
-            <strong>⚠ Yes — this is a High Risk clause.</strong> The landlord can terminate your agreement with only 7 days written notice, for any reason they choose.
-            <div class="urdu-reply">ہاں، مالک مکان صرف 7 دن کے نوٹس پر، بغیر کوئی وجہ بتائے، آپ کو گھر خالی کروا سکتا ہے۔ یہ شق آپ کے لیے انتہائی نقصان دہ ہے۔</div>
+            <strong>⚠ Yes — this is a High Risk clause.</strong> Clause 1 gives the landlord the right to terminate with only 7 days notice, for any reason, at their sole discretion. You have very limited protection here.
+            <div class="urdu-reply">ہاں، مالک مکان صرف 7 دن کے نوٹس پر، بغیر کوئی وجہ بتائے، آپ کو گھر خالی کروا سکتا ہے۔ دستخط سے پہلے اس شق پر مذاکرہ ضرور کریں اور کم از کم 60 دن کا نوٹس مانگیں۔</div>
             <div class="related-clause">📎 Based on: Clause 01 — Termination</div>
           </div>
         </div>
@@ -335,17 +266,17 @@
         <div class="qa-input-box">
           <textarea class="qa-textarea" id="qa-input" rows="2" placeholder="Type your question in Urdu or English… اردو یا انگریزی میں سوال لکھیں"></textarea>
           <div class="qa-actions">
-            <button class="btn-qa-send" onclick="sendMessage()">➤</button>
-            <button class="btn-qa-mic" title="Speak in Urdu">🎤</button>
+            <button class="btn-qa-send" onclick="sendMessage()" title="Send">➤</button>
+            <button class="btn-qa-mic" title="Speak in Urdu (coming soon)">🎤</button>
           </div>
         </div>
-        <div class="qa-hint">AI answers are based on your uploaded document only · Powered by RAG + LLM</div>
+        <div class="qa-hint">Press Enter to send · Shift+Enter for new line · AI answers are grounded in your document only via RAG</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════ PAGE 4: REPORT ═══════════════ -->
+<!-- ═══════════════════════════ PAGE 4: REPORT ═══════════════════════════ -->
 <div class="page" id="page-report">
   <div class="gold-stripe"></div>
   <nav>
@@ -353,57 +284,50 @@
     <div class="nav-links">
       <button class="nav-link" onclick="showPage('home')">Home</button>
       <button class="nav-link" onclick="showPage('analysis')">← Analysis</button>
-      <button class="nav-link" onclick="showPage('qa')">Q&A</button>
+      <button class="nav-link" onclick="showPage('qa')">Q&amp;A</button>
       <button class="nav-link active">Report</button>
     </div>
+    <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
   </nav>
 
   <div class="report-body">
     <div class="report-header-card">
       <div>
-        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Analysis Report</div>
-        <div class="report-doc-title">Rental Agreement — Karachi 2024</div>
-        <div class="report-meta">Analyzed on <span>20 February 2026</span> · <span>8 clauses</span> · Processed via LegalEase AI</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">LegalEase AI — Analysis Report</div>
+        <div class="report-doc-title" id="report-doc-name">Rental Agreement — Karachi 2024</div>
+        <div class="report-meta">Analyzed on <span id="report-date">20 February 2026</span> · <span id="report-total">8</span> clauses · Processed via LegalEase AI RAG Pipeline</div>
       </div>
-      <button class="btn-download">📄 Download PDF Report</button>
+      <button class="btn-download" onclick="downloadReport()">📄 Download PDF Report</button>
     </div>
 
     <div class="insights-row">
-      <div class="insight-card"><div class="insight-num neutral">8</div><div class="insight-label">Total Clauses</div></div>
-      <div class="insight-card"><div class="insight-num red">3</div><div class="insight-label">High Risk ⚠</div></div>
-      <div class="insight-card"><div class="insight-num yellow">2</div><div class="insight-label">Medium Risk ⚡</div></div>
-      <div class="insight-card"><div class="insight-num green">3</div><div class="insight-label">Safe ✓</div></div>
+      <div class="insight-card"><div class="insight-num neutral" id="report-total-2">8</div><div class="insight-label">Total Clauses Analyzed</div></div>
+      <div class="insight-card"><div class="insight-num red"     id="report-high">3</div><div class="insight-label">⚠ High Risk</div></div>
+      <div class="insight-card"><div class="insight-num yellow"  id="report-med">2</div><div class="insight-label">⚡ Medium Risk</div></div>
+      <div class="insight-card"><div class="insight-num green"   id="report-safe">3</div><div class="insight-label">✓ Safe Clauses</div></div>
     </div>
 
-    <div class="report-section-title">Clause Summary Table</div>
+    <div class="report-section-title">Clause Summary Table — خلاصہ جدول</div>
     <table class="report-table">
       <thead>
         <tr>
           <th>#</th>
           <th>Clause Type</th>
           <th>Urdu Explanation — اردو وضاحت</th>
-          <th>Risk Level</th>
+          <th>Risk</th>
         </tr>
       </thead>
-      <tbody>
-        <tr><td>01</td><td>Termination</td><td class="urdu-cell">مالک مکان 7 دن کے نوٹس پر بغیر وجہ نکال سکتا ہے</td><td><span class="risk-badge-sm red">⚠ High Risk</span></td></tr>
-        <tr><td>02</td><td>Penalty</td><td class="urdu-cell">دیر سے ادائیگی پر ہفتہ وار 5٪ جرمانہ</td><td><span class="risk-badge-sm yellow">⚡ Medium</span></td></tr>
-        <tr><td>03</td><td>Maintenance</td><td class="urdu-cell">10,000 روپے سے اوپر مرمت مالک کی ذمہ داری</td><td><span class="risk-badge-sm green">✓ Safe</span></td></tr>
-        <tr><td>04</td><td>Arbitration</td><td class="urdu-cell">عدالت جانے کا حق ختم — صرف ثالثی</td><td><span class="risk-badge-sm red">⚠ High Risk</span></td></tr>
-        <tr><td>05</td><td>Liability</td><td class="urdu-cell">نقصان کی صورت میں مالک ذمہ دار نہیں</td><td><span class="risk-badge-sm red">⚠ High Risk</span></td></tr>
-        <tr><td>06</td><td>Rent Increase</td><td class="urdu-cell">سالانہ 15٪ تک کرایہ بڑھ سکتا ہے</td><td><span class="risk-badge-sm yellow">⚡ Medium</span></td></tr>
-        <tr><td>07</td><td>Subletting</td><td class="urdu-cell">کسی اور کو گھر نہیں دے سکتے بغیر اجازت</td><td><span class="risk-badge-sm green">✓ Safe</span></td></tr>
-        <tr><td>08</td><td>Security Deposit</td><td class="urdu-cell">خالی کرنے کے 60 دن بعد ڈپازٹ واپس ملے گا</td><td><span class="risk-badge-sm green">✓ Safe</span></td></tr>
-      </tbody>
+      <tbody id="report-tbody"><!-- rendered by JS --></tbody>
     </table>
 
-    <div style="text-align:center; padding-bottom: 40px;">
-      <button class="btn-download" style="display:inline-flex;">📄 Download Full PDF Report</button>
+    <div style="display:flex;gap:12px;justify-content:center;padding-bottom:40px;flex-wrap:wrap;">
+      <button class="btn-download" onclick="downloadReport()">📄 Download Full PDF</button>
+      <button onclick="showPage('qa')" style="background:var(--accent);color:#fff;border:none;padding:14px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;">💬 Ask More Questions</button>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════ PAGE 5: ABOUT ═══════════════ -->
+<!-- ═══════════════════════════ PAGE 5: ABOUT ═══════════════════════════ -->
 <div class="page" id="page-about">
   <div class="gold-stripe"></div>
   <nav>
@@ -411,76 +335,77 @@
     <div class="nav-links">
       <button class="nav-link" onclick="showPage('home')">Home</button>
       <button class="nav-link active">About</button>
-      <button class="nav-link" onclick="showPage('analysis')">Demo</button>
+      <button class="nav-link" onclick="showPage('analysis')">Live Demo</button>
       <button class="nav-cta" onclick="showPage('home')">Try Now →</button>
     </div>
+    <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">☰</button>
   </nav>
 
   <div class="about-hero">
     <div class="about-hero-title">Why <span>LegalEase</span> AI?</div>
-    <div class="about-hero-sub">Over 90% of Pakistanis lack higher education. Legal documents in English are a barrier that puts ordinary people at risk every day.</div>
-    <div class="about-hero-urdu">قانونی دستاویزات کو سمجھنا اب مشکل نہیں — اردو میں آسان وضاحت</div>
+    <div class="about-hero-sub">Over 90% of Pakistanis lack higher education. Legal documents written in complex English are a daily barrier that puts millions at risk — every time they sign.</div>
+    <div class="about-hero-urdu">قانونی دستاویزات کو سمجھنا اب مشکل نہیں — اردو میں آسان، فوری وضاحت</div>
   </div>
 
   <div class="about-content">
-    <div class="report-section-title" style="margin-bottom:28px;">Why LegalEase AI Will Work</div>
+    <div class="report-section-title" style="margin-bottom:28px;">Why It Will Work in Pakistan</div>
     <div class="why-grid">
       <div class="why-card">
         <div class="why-icon">📋</div>
-        <div class="why-title">Complex English Contracts</div>
-        <div class="why-desc">Most contracts in Pakistan are written in complex legal English that ordinary people cannot understand, leaving them vulnerable to unfair terms.</div>
+        <div class="why-title">Contracts Are Written in Complex English</div>
+        <div class="why-desc">Rental agreements, loan documents, employment contracts — almost all legal documents in Pakistan are in dense English that average citizens simply cannot parse. LegalEase AI bridges this gap instantly.</div>
       </div>
       <div class="why-card">
         <div class="why-icon">💰</div>
-        <div class="why-title">Lawyers Are Expensive</div>
-        <div class="why-desc">Hiring a lawyer to review a rental agreement is out of reach for most Pakistanis. LegalEase AI bridges this gap — not replacing lawyers, but empowering people.</div>
+        <div class="why-title">Lawyers Are Too Expensive for Most</div>
+        <div class="why-desc">A legal consultation costs PKR 5,000–50,000. LegalEase AI doesn't replace lawyers — it empowers ordinary people to understand what they're signing before they're trapped by unfair terms.</div>
       </div>
       <div class="why-card">
         <div class="why-icon">🇵🇰</div>
-        <div class="why-title">Urdu Localization</div>
-        <div class="why-desc">AI explanations in plain, culturally appropriate Urdu — not just translation, but contextual simplification that makes sense to everyday users.</div>
+        <div class="why-title">Built for Urdu Speakers</div>
+        <div class="why-desc">Explanations are in plain, culturally appropriate Urdu using the Noto Nastaliq font — not just literal translation, but contextual simplification that resonates with everyday Pakistani users.</div>
       </div>
       <div class="why-card">
         <div class="why-icon">🛡️</div>
-        <div class="why-title">Risk Detection</div>
-        <div class="why-desc">Automatically flags termination, penalty, liability, and arbitration clauses. Red/yellow/green system makes risks instantly visible at a glance.</div>
+        <div class="why-title">Instant Risk Detection</div>
+        <div class="why-desc">Termination clauses, penalty traps, liability waivers, arbitration locks — automatically flagged with Red/Yellow/Green risk ratings so risks are visible at a glance before signing.</div>
       </div>
     </div>
 
-    <div class="report-section-title" style="margin-bottom:28px;">How It Works — Technical</div>
+    <div class="report-section-title" style="margin-bottom:28px;">Technical Architecture</div>
     <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:32px;margin-bottom:40px;">
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;text-align:center;">
-        <div><div style="font-size:28px;margin-bottom:10px;">📄</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Upload</div><div style="font-size:11px;color:var(--muted);">PDF/DOC via pdfplumber or PyPDF2</div></div>
-        <div><div style="font-size:28px;margin-bottom:10px;">✂️</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Chunking</div><div style="font-size:11px;color:var(--muted);">RAG embeddings stored in FAISS vector DB</div></div>
-        <div><div style="font-size:28px;margin-bottom:10px;">🔍</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Risk Scan</div><div style="font-size:11px;color:var(--muted);">Keywords + patterns for each risk type</div></div>
-        <div><div style="font-size:28px;margin-bottom:10px;">🌐</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Urdu AI</div><div style="font-size:11px;color:var(--muted);">LLM prompts for simple Urdu explanation</div></div>
-        <div><div style="font-size:28px;margin-bottom:10px;">📊</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Report</div><div style="font-size:11px;color:var(--muted);">PDF with risk summary + Urdu clauses</div></div>
+        <div><div style="font-size:28px;margin-bottom:10px;">📄</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Upload</div><div style="font-size:11px;color:var(--muted);">pdfplumber / PyPDF2 text extraction</div></div>
+        <div><div style="font-size:28px;margin-bottom:10px;">✂️</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">RAG Chunking</div><div style="font-size:11px;color:var(--muted);">LangChain text splitter → FAISS vector DB</div></div>
+        <div><div style="font-size:28px;margin-bottom:10px;">🔍</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Risk Detection</div><div style="font-size:11px;color:var(--muted);">Keyword + semantic pattern matching</div></div>
+        <div><div style="font-size:28px;margin-bottom:10px;">🌐</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">Urdu via LLM</div><div style="font-size:11px;color:var(--muted);">GPT / Gemini prompt-engineered for Urdu</div></div>
+        <div><div style="font-size:28px;margin-bottom:10px;">📊</div><div style="font-size:13px;font-weight:700;margin-bottom:6px;">PDF Report</div><div style="font-size:11px;color:var(--muted);">ReportLab / WeasyPrint formatted output</div></div>
       </div>
     </div>
 
-    <div class="report-section-title" style="margin-bottom:28px;">Team</div>
+    <div class="report-section-title" style="margin-bottom:28px;">Our Team</div>
     <div class="team-grid" style="margin-bottom:40px;">
       <div class="team-card">
         <div class="team-avatar">A</div>
         <div class="team-name">Team Member 1</div>
-        <div class="team-role">AI & Backend Engineer</div>
+        <div class="team-role">AI &amp; Backend · FastAPI · LangChain · FAISS</div>
       </div>
       <div class="team-card">
         <div class="team-avatar">B</div>
         <div class="team-name">Team Member 2</div>
-        <div class="team-role">Frontend & UI/UX Designer</div>
+        <div class="team-role">Frontend &amp; UX · Vanilla JS · Responsive Design</div>
       </div>
       <div class="team-card">
         <div class="team-avatar">C</div>
         <div class="team-name">Team Member 3</div>
-        <div class="team-role">NLP & Urdu Language Expert</div>
+        <div class="team-role">NLP &amp; Urdu Language · Prompt Engineering</div>
       </div>
     </div>
 
     <div class="hackathon-banner">
       <div class="hackathon-label">🏆 Competition Entry</div>
       <div class="hackathon-title">Hackathon 2025 — AI for Pakistan</div>
-      <div class="hackathon-desc">Built with Python · FastAPI · FAISS · LangChain · Vanilla JS · Practical AI for real Pakistani problems</div>
+      <div class="hackathon-desc">Python · FastAPI · LangChain · FAISS · Noto Nastaliq Urdu · Vanilla JS · Vercel<br>Practical AI solving a real problem for 220 million Pakistanis.</div>
     </div>
   </div>
 
@@ -490,13 +415,16 @@
       <div class="footer-info">اردو قانونی معاون · Urdu Legal Assistant</div>
     </div>
     <div style="text-align:center;">
-      <div class="footer-hackathon">🏆 Hackathon Project 2025</div>
+      <div class="footer-hackathon">🏆 Hackathon 2025 — AI for Pakistan</div>
     </div>
     <div style="text-align:right;">
       <div class="footer-info">team@legalease.ai</div>
     </div>
   </footer>
 </div>
+
+<!-- Scroll to top -->
+<button id="scroll-top-btn" onclick="scrollToTop()" aria-label="Scroll to top">↑</button>
 
 <script src="app.js"></script>
 </body>
