@@ -27,7 +27,9 @@
 const API_BASE_URL = window.LEGALEASE_API_URL || 'http://localhost:8000';
 
 // Set to false to disable demo mode and use real API
-const USE_DEMO_MODE = true;
+// ⚠️ IMPORTANT: Backend must be running at http://localhost:8000
+// Start with: uvicorn main:app --reload --port 8000
+const USE_DEMO_MODE = false;
 
 // ─── DEMO DATA ────────────────────────────────────────────────
 // Used when USE_DEMO_MODE = true. Remove once backend is ready.
