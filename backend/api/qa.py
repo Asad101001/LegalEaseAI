@@ -1,13 +1,12 @@
+# api/qa.py
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from core.rag import retrieve
 from core.prompts import qa_prompt
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 import os
 import re
-import asyncio
 
 load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
@@ -15,7 +14,8 @@ api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
     raise ValueError("GEMINI_API_KEY not found in .env")
 
-client = genai.Client(api_key=api_key)
+genai.configure(api_key=api_key)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 router = APIRouter()
 
@@ -54,13 +54,11 @@ async def ask_question(req: QARequest):
         prompt = qa_prompt(req.question, chunks)
         
         # Call Gemini
-        loop = asyncio.get_event_loop()
-        response = await loop.run_in_executor(
-            None,
-            lambda: client.models.generate_content(
-                model="gemini-1.5-flash",
-                contents=prompt,
-                config=types.GenerateContentConfig(max_output_tokens=400, temperature=0.3)
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.types.GenerationConfig(
+                max_output_tokens=300,
+                temperature=0.3,
             )
         )
         

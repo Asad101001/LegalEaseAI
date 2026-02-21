@@ -14,9 +14,8 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# ─── CORS ─────────────────────────────────────────────────────
-# FIX: Cannot combine allow_origins=["*"] with allow_credentials=True
-# Using specific origins with credentials=True (correct approach)
+# ─── CORS MIDDLEWARE ──────────────────────────────────────────
+# Allow frontend to communicate with backend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -24,53 +23,46 @@ app.add_middleware(
         "http://127.0.0.1:5500",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "http://localhost:8080",
-        "http://127.0.0.1:8080",
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
         "https://legalease-ai.vercel.app",
-        "null",  # browsers send 'null' origin when opening index.html as a local file
+        "*"  # Allow all for development
     ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# ─── PRE-LOAD EMBEDDING MODEL AT STARTUP ──────────────────────
-# FIX: Load sentence-transformers model at startup, not on first request.
-# Without this, the first upload request times out waiting for the ~90MB model to download.
-@app.on_event("startup")
-async def startup_event():
-    try:
-        from core.embeddings import model as _embedding_model
-        print("[STARTUP] Embedding model loaded successfully.")
-    except Exception as e:
-        print(f"[STARTUP WARNING] Could not pre-load embedding model: {e}")
 
 # ─── GLOBAL ERROR HANDLER ─────────────────────────────────────
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    error_id = str(abs(hash(str(exc))))[-6:]
+    """Catch all unhandled exceptions and return structured error response"""
+    error_id = str(hash(exc))[-6:]
+    
     print(f"[ERROR {error_id}] {type(exc).__name__}: {str(exc)}")
     traceback.print_exc()
+    
     return JSONResponse(
         status_code=500,
         content={
             "error": "Internal Server Error",
-            "message": str(exc)[:200],
+            "message": str(exc)[:100],
             "error_id": error_id
         }
     )
 
-# ─── VALIDATION ERROR HANDLER ─────────────────────────────────
+# ─── VALIDATION ERROR HANDLER ──────────────────────────────────
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Handle request validation errors"""
+    # Convert errors to JSON-serializable format (remove exception objects)
     errors = exc.errors()
     serializable_errors = []
     for error in errors:
         err_dict = dict(error)
-        err_dict.pop("ctx", None)  # Remove non-serializable exception context
+        # Remove 'ctx' which may contain non-serializable exception objects
+        if 'ctx' in err_dict:
+            del err_dict['ctx']
         serializable_errors.append(err_dict)
+    
     return JSONResponse(
         status_code=422,
         content={
@@ -80,14 +72,15 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         }
     )
 
-# ─── ROUTERS ──────────────────────────────────────────────────
+# ─── API ROUTERS ───────────────────────────────────────────────
 app.include_router(analyze_router, prefix="/api", tags=["Analysis"])
-app.include_router(qa_router,     prefix="/api", tags=["Q&A"])
+app.include_router(qa_router, prefix="/api", tags=["Q&A"])
 app.include_router(report_router, prefix="/api", tags=["Report"])
 
-# ─── HEALTH ───────────────────────────────────────────────────
+# ─── HEALTH CHECK ──────────────────────────────────────────────
 @app.get("/")
 def health_check():
+    """Health check endpoint"""
     return {
         "status": "running",
         "service": "LegalEase AI Backend",
@@ -97,4 +90,5 @@ def health_check():
 
 @app.get("/health")
 def health():
+    """Alternative health endpoint"""
     return {"status": "ok"}

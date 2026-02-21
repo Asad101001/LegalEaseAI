@@ -1,5 +1,7 @@
+# core/prompts.py
+
 def urdu_explanation_prompt(clause_text: str, clause_type: str = "", risk_level: str = "") -> str:
-    """Build prompt for Urdu explanation (used as reference — actual call is in urdu_explainer.py)"""
+    """Build prompt for Urdu explanation"""
     return f"""Explain this {clause_type} clause in VERY SIMPLE Urdu for a Pakistani citizen:
 
 Clause:
@@ -17,7 +19,7 @@ Provide ONLY the Urdu explanation."""
 
 def qa_prompt(question: str, chunks: list) -> str:
     """
-    Build a structured RAG prompt for Q&A.
+    Build a structured prompt for Q&A using RAG.
     chunks = list of clause dicts with keys: id, type, risk, original, urdu
     """
     clauses_text = "\n\n".join([
@@ -27,8 +29,8 @@ def qa_prompt(question: str, chunks: list) -> str:
         f"Urdu: {c.get('urdu', '')}"
         for c in chunks
     ])
-
-    return f"""You are a legal assistant helping Pakistani citizens understand contracts.
+    
+    prompt = f"""You are a legal assistant helping Pakistani citizens understand contracts.
 
 IMPORTANT: Answer ONLY based on the clauses provided. If the answer is not in these clauses, say you cannot answer.
 
@@ -46,7 +48,9 @@ Provide your response in this exact format:
 <2-3 sentence answer in simple Urdu>
 
 [SOURCE]
-<Which clause(s) this answer is based on, e.g. "Clause 1 - Termination">
+<Which clause(s) this answer is based on (e.g., "Clause 1 - Termination")>
 
 [CONFIDENCE]
-<A number from 0 to 100 representing how confident you are this answer is correct>"""
+<0.0 to 1.0 - how confident are you this answer is correct based on the document>"""
+    
+    return prompt
