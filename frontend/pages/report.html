@@ -1,0 +1,68 @@
+<div class="page" id="page-report">
+  <div class="gold-stripe"></div>
+  <nav>
+    <a class="nav-logo" onclick="showPage('home')">Legal<span>Ease</span> AI <small>اردو قانونی معاون</small></a>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('home')">Home</button>
+      <button class="nav-link" onclick="showPage('analysis')">&larr; Analysis</button>
+      <button class="nav-link" onclick="showPage('qa')">Q&amp;A</button>
+      <button class="nav-link active">Report</button>
+    </div>
+    <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
+  </nav>
+  <div class="mobile-menu">
+    <button class="nav-link" onclick="showPage('home')">Home</button>
+    <button class="nav-link" onclick="showPage('analysis')">&larr; Analysis</button>
+    <button class="nav-link" onclick="showPage('qa')">Q&amp;A</button>
+  </div>
+
+  <div class="report-body">
+    <div class="report-header-card anim-fade-in">
+      <div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;position:relative;">LegalEase AI &mdash; Analysis Report</div>
+        <div class="report-doc-title" id="report-doc-name">Rental Agreement Karachi 2024</div>
+        <div class="report-meta">Analyzed on <span id="report-date">20 February 2026</span> &middot; <span id="report-total">8</span> clauses &middot; Processed via LegalEase AI RAG Pipeline</div>
+      </div>
+      <button class="btn-download" onclick="triggerDownloadReport()">&#128196; Download PDF Report</button>
+    </div>
+
+    <div class="insights-row anim-stagger">
+      <div class="insight-card scroll-reveal">
+        <div class="insight-num neutral" id="report-total-2" data-target="8">8</div>
+        <div class="insight-label">Total Clauses Analyzed</div>
+      </div>
+      <div class="insight-card scroll-reveal delay-1">
+        <div class="insight-num red" id="report-high" data-target="3">3</div>
+        <div class="insight-label">&#9888; High Risk</div>
+      </div>
+      <div class="insight-card scroll-reveal delay-2">
+        <div class="insight-num yellow" id="report-med" data-target="2">2</div>
+        <div class="insight-label">&#9889; Medium Risk</div>
+      </div>
+      <div class="insight-card scroll-reveal delay-3">
+        <div class="insight-num green" id="report-safe" data-target="3">3</div>
+        <div class="insight-label">&#10003; Safe Clauses</div>
+      </div>
+    </div>
+
+    <div class="report-section-title scroll-reveal">Clause Summary Table &mdash; خلاصہ جدول</div>
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Clause Type</th>
+          <th>Urdu Explanation &mdash; اردو وضاحت</th>
+          <th>Risk</th>
+        </tr>
+      </thead>
+      <tbody id="report-tbody"><!-- rendered by app.js --></tbody>
+    </table>
+
+    <div style="display:flex;gap:12px;justify-content:center;padding-bottom:48px;flex-wrap:wrap;" class="scroll-reveal">
+      <button class="btn-download" onclick="triggerDownloadReport()">&#128196; Download Full PDF</button>
+      <button onclick="showPage('qa')" style="background:var(--accent);color:#fff;border:none;padding:14px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.25s;" onmouseover="this.style.background='var(--accent-light)'" onmouseout="this.style.background='var(--accent)'">
+        &#128172; Ask More Questions
+      </button>
+    </div>
+  </div>
+</div>

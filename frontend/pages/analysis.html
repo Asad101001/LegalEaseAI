@@ -1,0 +1,62 @@
+<div class="page" id="page-analysis">
+  <div class="gold-stripe"></div>
+  <nav>
+    <a class="nav-logo" onclick="showPage('home')">Legal<span>Ease</span> AI <small>اردو قانونی معاون</small></a>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('home')">Home</button>
+      <button class="nav-link" onclick="showPage('about')">About</button>
+      <button class="nav-link active">Analysis</button>
+      <button class="nav-link" onclick="showPage('qa')">Q&amp;A</button>
+      <button class="nav-cta" onclick="showPage('report')">&#128196; Generate Report</button>
+    </div>
+    <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
+  </nav>
+  <div class="mobile-menu">
+    <button class="nav-link" onclick="showPage('home')">Home</button>
+    <button class="nav-link" onclick="showPage('about')">About</button>
+    <button class="nav-link" onclick="showPage('qa')">Q&amp;A</button>
+    <button class="nav-cta" onclick="showPage('report')">&#128196; Report</button>
+  </div>
+
+  <div class="analysis-topbar">
+    <div class="doc-info">
+      <div class="doc-icon">&#128203;</div>
+      <div>
+        <div class="doc-name" id="doc-name-display">Rental_Agreement_Karachi_2024.pdf</div>
+        <div class="doc-meta" id="doc-meta-display">8 clauses detected &middot; 3 high risk &middot; 2 medium risk</div>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="search-box">
+        <span>&#128269;</span>
+        <input type="text" id="clause-search" placeholder="Search clauses..."/>
+      </div>
+      <button class="filter-btn all on" id="filter-all"    onclick="setActiveFilter('all')">All</button>
+      <button class="filter-btn high"   id="filter-high"   onclick="setActiveFilter('high')">&#9888; High</button>
+      <button class="filter-btn medium" id="filter-medium" onclick="setActiveFilter('medium')">&#9889; Medium</button>
+      <button class="filter-btn safe"   id="filter-safe"   onclick="setActiveFilter('safe')">&#10003; Safe</button>
+    </div>
+  </div>
+
+  <div class="analysis-body">
+    <div class="left-panel">
+      <div class="panel-head">
+        <span>Original Clauses</span>
+        <span style="color:var(--gold);cursor:pointer;font-weight:600;" onclick="showPage('qa')">Ask Q&amp;A &rarr;</span>
+      </div>
+      <div id="clause-list"><!-- rendered by app.js --></div>
+    </div>
+    <div class="right-panel">
+      <div class="panel-head"><span>Urdu Analysis and Risk</span></div>
+      <div id="analysis-cards"><!-- rendered by app.js --></div>
+    </div>
+  </div>
+
+  <div class="nav-clause-row">
+    <button class="btn-clause" onclick="navigateClause(-1)">&larr; Previous</button>
+    <button class="btn-clause" onclick="showPage('home')">&#128196; New Document</button>
+    <button class="btn-clause" onclick="showPage('qa')">&#128172; Ask in Urdu</button>
+    <button class="btn-clause primary" onclick="showPage('report')">Generate Report &rarr;</button>
+    <button class="btn-clause" onclick="navigateClause(1)">Next &rarr;</button>
+  </div>
+</div>
