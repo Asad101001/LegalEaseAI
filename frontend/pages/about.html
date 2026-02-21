@@ -1,0 +1,131 @@
+<div class="page" id="page-about">
+  <div class="gold-stripe"></div>
+  <nav>
+    <a class="nav-logo" onclick="showPage('home')">Legal<span>Ease</span> AI <small>اردو قانونی معاون</small></a>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('home')">Home</button>
+      <button class="nav-link active">About</button>
+      <button class="nav-link" onclick="showPage('analysis')">Live Demo</button>
+      <button class="nav-cta" onclick="showPage('home')">Try Now &rarr;</button>
+    </div>
+    <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
+  </nav>
+  <div class="mobile-menu">
+    <button class="nav-link" onclick="showPage('home')">Home</button>
+    <button class="nav-link" onclick="showPage('analysis')">Live Demo</button>
+    <button class="nav-cta" onclick="showPage('home')">Try Now &rarr;</button>
+  </div>
+
+  <div class="about-hero">
+    <div class="about-hero-title anim-fade-up">Why <span>LegalEase</span> AI?</div>
+    <div class="about-hero-sub anim-fade-up" style="animation-delay:.1s;">
+      Over 90% of Pakistanis lack higher education. Legal documents written in complex English are a daily barrier that puts millions at risk every time they sign.
+    </div>
+    <div class="about-hero-urdu anim-fade-up" style="animation-delay:.2s;">قانونی دستاویزات کو سمجھنا اب مشکل نہیں، اردو میں آسان اور فوری وضاحت</div>
+  </div>
+
+  <div class="about-content">
+
+    <div class="report-section-title scroll-reveal" style="margin-bottom:28px;">Why It Will Work in Pakistan</div>
+    <div class="why-grid">
+      <div class="why-card hover-lift scroll-reveal">
+        <div class="why-icon">&#128203;</div>
+        <div class="why-title">Contracts Are Written in Complex English</div>
+        <div class="why-desc">Rental agreements, loan documents, employment contracts. Almost all legal documents in Pakistan are in dense English that average citizens cannot parse. LegalEase AI bridges this gap instantly.</div>
+      </div>
+      <div class="why-card hover-lift scroll-reveal delay-1">
+        <div class="why-icon">&#128176;</div>
+        <div class="why-title">Lawyers Are Too Expensive for Most</div>
+        <div class="why-desc">A legal consultation costs PKR 5,000 to 50,000. LegalEase AI does not replace lawyers. It empowers ordinary people to understand what they are signing before they are trapped by unfair terms.</div>
+      </div>
+      <div class="why-card hover-lift scroll-reveal delay-2">
+        <div class="why-icon">&#127477;&#127472;</div>
+        <div class="why-title">Built for Urdu Speakers</div>
+        <div class="why-desc">Explanations are in plain, culturally appropriate Urdu using the Noto Nastaliq font. Not just literal translation, but contextual simplification that resonates with everyday Pakistani users.</div>
+      </div>
+      <div class="why-card hover-lift scroll-reveal delay-3">
+        <div class="why-icon">&#128737;&#65039;</div>
+        <div class="why-title">Instant Risk Detection</div>
+        <div class="why-desc">Termination clauses, penalty traps, liability waivers, arbitration locks. Automatically flagged with Red, Yellow, and Green risk ratings so risks are visible at a glance before signing.</div>
+      </div>
+    </div>
+
+    <div class="report-section-title scroll-reveal" style="margin-bottom:28px;">Technical Architecture</div>
+    <div class="scroll-reveal" style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:32px;margin-bottom:48px;">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;text-align:center;">
+        <div class="scroll-reveal">
+          <div style="font-size:28px;margin-bottom:10px;">&#128196;</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">Upload</div>
+          <div style="font-size:11px;color:var(--muted);">pdfplumber and PyPDF2 text extraction</div>
+        </div>
+        <div class="scroll-reveal delay-1">
+          <div style="font-size:28px;margin-bottom:10px;">&#9986;&#65039;</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">RAG Chunking</div>
+          <div style="font-size:11px;color:var(--muted);">LangChain splitter and FAISS vector DB</div>
+        </div>
+        <div class="scroll-reveal delay-2">
+          <div style="font-size:28px;margin-bottom:10px;">&#128269;</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">Risk Detection</div>
+          <div style="font-size:11px;color:var(--muted);">Keyword and semantic pattern matching</div>
+        </div>
+        <div class="scroll-reveal delay-3">
+          <div style="font-size:28px;margin-bottom:10px;">&#127760;</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">Urdu via LLM</div>
+          <div style="font-size:11px;color:var(--muted);">GPT or Gemini prompt-engineered for Urdu</div>
+        </div>
+        <div class="scroll-reveal delay-4">
+          <div style="font-size:28px;margin-bottom:10px;">&#128202;</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:6px;">PDF Report</div>
+          <div style="font-size:11px;color:var(--muted);">ReportLab or WeasyPrint formatted output</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="report-section-title scroll-reveal" style="margin-bottom:28px;">Our Team</div>
+    <div class="team-grid" style="margin-bottom:48px;">
+      <div class="team-card hover-lift scroll-reveal">
+        <div class="team-avatar">F</div>
+        <div class="team-name">Farhana Faiz</div>
+      </div>
+      <div class="team-card hover-lift scroll-reveal delay-1">
+        <div class="team-avatar">F</div>
+        <div class="team-name">Fazeelat Shaheen</div>
+      </div>
+      <div class="team-card hover-lift scroll-reveal delay-2">
+        <div class="team-avatar">H</div>
+        <div class="team-name">Hammad Zahid</div>
+      </div>
+      <div class="team-card hover-lift scroll-reveal delay-3">
+        <div class="team-avatar">M</div>
+        <div class="team-name">Muhammad Asad</div>
+      </div>
+      <div class="team-card hover-lift scroll-reveal delay-4">
+        <div class="team-avatar">Z</div>
+        <div class="team-name">Zain Ibrar</div>
+      </div>
+      <div class="team-card hover-lift scroll-reveal delay-4">
+        <div class="team-avatar">Z</div>
+        <div class="team-name">Zaryab Aamir</div>
+      </div>
+    </div>
+
+    <div class="hackathon-banner scroll-reveal">
+      <div class="hackathon-label">&#127942; Competition Entry</div>
+      <div class="hackathon-title">Hackathon 2026 &mdash; AI for Pakistan</div>
+      <div class="hackathon-desc">Python &middot; FastAPI &middot; LangChain &middot; FAISS &middot; Noto Nastaliq Urdu &middot; Vanilla JS &middot; Vercel<br>Practical AI solving a real problem for 220 million Pakistanis.</div>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <div class="footer-logo">Legal<span>Ease</span> AI</div>
+      <div class="footer-info">اردو قانونی معاون &middot; Urdu Legal Assistant</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="footer-hackathon">&#127942; Hackathon 2026 &mdash; AI for Pakistan</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="footer-info">team@legalease.ai</div>
+    </div>
+  </footer>
+</div>

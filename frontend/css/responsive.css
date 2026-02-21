@@ -1,0 +1,56 @@
+@media (max-width: 1024px) {
+  nav { padding: 0 28px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; align-items: center; }
+
+  .hero { grid-template-columns: 1fr; padding: 48px 28px; gap: 40px; }
+  .hero-left { animation: fadeUp 0.6s ease both; }
+  .upload-card { animation: fadeUp 0.6s 0.1s ease both; }
+  .hero-title { font-size: 40px; }
+
+  .hiw-section { padding: 60px 28px; }
+  .hiw-steps { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .hiw-steps::before { display: none; }
+
+  footer { padding: 32px 28px; flex-direction: column; text-align: center; }
+
+  .analysis-body { grid-template-columns: 1fr; height: auto; }
+  .left-panel { border-right: none; border-bottom: 1px solid var(--border); max-height: 38vh; }
+  .right-panel { max-height: 48vh; }
+
+  .qa-layout { grid-template-columns: 1fr; }
+  .qa-sidebar { display: none; }
+
+  .insights-row { grid-template-columns: repeat(2, 1fr); }
+  .why-grid { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr 1fr; }
+  .report-header-card { grid-template-columns: 1fr; }
+  .about-hero { padding: 60px 28px; }
+  .about-hero-title { font-size: 36px; }
+  .about-content { padding: 40px 28px; }
+  .report-body { padding: 24px 20px; }
+}
+
+@media (max-width: 640px) {
+  .hero-title { font-size: 30px; }
+  .hero-stats { gap: 20px; flex-wrap: wrap; }
+  .hiw-steps { grid-template-columns: 1fr 1fr; }
+  .filter-row { gap: 4px; }
+  .search-box input { width: 90px; }
+  .analysis-topbar { flex-direction: column; align-items: flex-start; padding: 12px 16px; }
+  .nav-clause-row { padding: 10px 12px; gap: 5px; }
+  .btn-clause { padding: 7px 10px; font-size: 11px; }
+  .team-grid { grid-template-columns: 1fr; }
+  .insights-row { grid-template-columns: 1fr 1fr; }
+  .report-table th, .report-table td { padding: 10px 12px; font-size: 12px; }
+  .qa-messages { padding: 16px; }
+  .qa-input-area { padding: 12px 16px; }
+  .left-panel, .right-panel { padding: 16px; }
+  .upload-card { padding: 28px 20px; }
+  .hero { padding: 32px 20px; gap: 28px; }
+  .hiw-section { padding: 48px 20px; }
+  .about-hero { padding: 48px 20px; }
+  .about-hero-title { font-size: 28px; }
+  .report-body { padding: 16px; }
+  .report-header-card { padding: 24px 20px; }
+}

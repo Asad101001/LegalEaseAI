@@ -1,0 +1,129 @@
+<div class="page active" id="page-home">
+  <div class="gold-stripe"></div>
+  <nav>
+    <a class="nav-logo" onclick="showPage('home')">Legal<span>Ease</span> AI <small>اردو قانونی معاون</small></a>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="showPage('home')">Home</button>
+      <button class="nav-link" onclick="showPage('about')">About</button>
+      <button class="nav-link" onclick="showPage('analysis')">Live Demo</button>
+      <button class="nav-link" onclick="showPage('qa')">Q&amp;A</button>
+      <button class="nav-cta" onclick="showPage('analysis')">Try Now &rarr;</button>
+    </div>
+    <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
+  </nav>
+  <div class="mobile-menu">
+    <button class="nav-link" onclick="showPage('home')">Home</button>
+    <button class="nav-link" onclick="showPage('about')">About</button>
+    <button class="nav-link" onclick="showPage('analysis')">Live Demo</button>
+    <button class="nav-link" onclick="showPage('qa')">Q&amp;A</button>
+    <button class="nav-cta" onclick="showPage('analysis')">Try Now &rarr;</button>
+  </div>
+
+  <section style="flex:1;display:flex;flex-direction:column;position:relative;">
+    <div class="hero-bg"></div>
+
+    <div class="hero">
+      <div class="hero-left">
+        <div class="hero-eyebrow scroll-reveal">&#127477;&#127472; Built for Pakistan</div>
+        <h1 class="hero-title scroll-reveal delay-1">
+          Understand Legal Documents in <em>Urdu</em> Instantly
+        </h1>
+        <p class="hero-urdu scroll-reveal delay-2">اپنے قانونی دستاویزات کو آسان اردو میں سمجھیں، بغیر وکیل کے</p>
+        <p class="hero-desc scroll-reveal delay-2">Upload your contract, rental agreement, or loan document. Our AI detects risky clauses, explains them in plain Urdu, and answers your questions in seconds.</p>
+        <div class="hero-stats anim-stagger scroll-reveal delay-3">
+          <div class="stat">
+            <div class="stat-num">90%</div>
+            <div class="stat-label">Pakistanis without higher education</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Risk levels detected</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">&#8734;</div>
+            <div class="stat-label">Q&amp;A answered in Urdu</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="upload-card hover-glow">
+        <div class="upload-card-title">Analyze Your Document</div>
+        <div class="upload-card-sub">Rental agreements &middot; Loan documents &middot; Employment contracts &middot; Terms and Conditions</div>
+
+        <div class="drop-zone" id="drop-zone">
+          <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt" style="display:none"/>
+          <div class="drop-icon">&#128196;</div>
+          <div class="drop-title">Drag &amp; Drop your file here</div>
+          <div class="drop-sub">or click to browse &mdash; PDF, DOC, DOCX, TXT</div>
+          <div class="type-chips">
+            <span class="type-chip">PDF</span>
+            <span class="type-chip">DOC</span>
+            <span class="type-chip">DOCX</span>
+            <span class="type-chip">TXT</span>
+          </div>
+          <div class="upload-progress" style="display:none;">
+            <div class="upload-progress-bar" id="upload-progress-bar"></div>
+          </div>
+        </div>
+
+        <button class="btn-upload" id="upload-btn">
+          &#128269; Upload &amp; Analyze Document
+        </button>
+        <p class="upload-note">&#128274; Processed securely &middot; Files are never stored &middot; Private by design</p>
+        <div style="text-align:center;margin-top:14px;">
+          <button onclick="showPage('analysis')" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline;">
+            or view live demo with sample document &rarr;
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- How It Works -->
+    <section class="hiw-section">
+      <div class="hiw-title scroll-reveal">How LegalEase AI Works</div>
+      <div class="hiw-sub scroll-reveal delay-1">From confusing English legalese to clear Urdu in 5 steps</div>
+      <div class="hiw-steps anim-stagger scroll-reveal delay-2">
+        <div class="hiw-step">
+          <div class="hiw-num">1</div>
+          <div class="hiw-step-title">Upload Document</div>
+          <div class="hiw-step-desc">Upload PDF, DOC, or paste text of your contract or agreement</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">2</div>
+          <div class="hiw-step-title">AI Processing</div>
+          <div class="hiw-step-desc">Text extracted via pdfplumber, split into clauses, stored in FAISS embeddings</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">3</div>
+          <div class="hiw-step-title">Risk Detection</div>
+          <div class="hiw-step-desc">Each clause scanned for termination, penalty, liability and arbitration risks</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">4</div>
+          <div class="hiw-step-title">Urdu Explanation</div>
+          <div class="hiw-step-desc">Every clause explained in plain, culturally appropriate Urdu via LLM</div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">5</div>
+          <div class="hiw-step-title">Report and Q&amp;A</div>
+          <div class="hiw-step-desc">Download a full PDF report and ask unlimited questions in Urdu</div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <footer>
+    <div>
+      <div class="footer-logo">Legal<span>Ease</span> AI</div>
+      <div class="footer-info">اردو قانونی معاون &middot; Urdu Legal Assistant</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="footer-hackathon">&#127942; Hackathon 2025 &mdash; AI for Pakistan</div>
+      <div class="footer-info">RAG &middot; FAISS &middot; LangChain &middot; FastAPI &middot; Vanilla JS</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="footer-info">team@legalease.ai</div>
+      <div class="footer-info">Karachi &middot; Lahore &middot; Islamabad</div>
+    </div>
+  </footer>
+</div>
