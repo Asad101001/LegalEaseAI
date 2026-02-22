@@ -50,7 +50,7 @@ Provide ONLY the Urdu explanation, nothing else. Start directly with the explana
         response = await loop.run_in_executor(
             None,
             lambda: client.models.generate_content(
-                model="gemini-1.5-flash-latest",
+                model="gemini-2.0-flash-lite",
                 contents=prompt,
                 config=_GEN_CONFIG,
             )

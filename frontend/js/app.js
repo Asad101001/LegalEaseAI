@@ -74,7 +74,12 @@ function handleFileSelect(file) {
     .then(data => {
       state.documentId   = data.document_id;
       state.documentName = data.document_name || file.name;
-      state.clauses      = data.clauses;
+      state.clauses = data.clauses;
+      sessionStorage.setItem('legalease_state', JSON.stringify({
+      documentId: state.documentId,
+      documentName: state.documentName,
+      clauses: state.clauses
+      }));
       renderAnalysisPage();
       syncQASidebar();
       clearQAMessages();
@@ -434,6 +439,20 @@ function initScrollAnimations() {
 
 // ─── INIT ─────────────────────────────────────────────────────
 function initApp() {
+  
+  const saved = sessionStorage.getItem('legalease_state');
+  if (saved) {
+    try {
+      const s = JSON.parse(saved);
+      state.documentId   = s.documentId;
+      state.documentName = s.documentName;
+      state.clauses      = s.clauses || [];
+      if (state.clauses.length) {
+        renderAnalysisPage();
+        syncQASidebar();
+      }
+    } catch(e) {}
+  }
   // Always start clean - no fake API calls
   state.clauses      = [];
   state.documentName = null;

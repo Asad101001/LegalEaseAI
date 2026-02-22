@@ -57,7 +57,7 @@ async def ask_question(req: QARequest):
         response = await loop.run_in_executor(
             None,
             lambda: client.models.generate_content(
-                model="gemini-1.5-flash-latest",
+                model="gemini-2.0-flash-lite",
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     max_output_tokens=400,
