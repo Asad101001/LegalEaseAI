@@ -20,33 +20,29 @@ async def analyze_document(file: UploadFile = File(...)):
         raise HTTPException(status_code=413, detail="File exceeds 10MB limit")
 
     try:
-        # Step 1: Extract text (uses await file.read() internally)
         text = await extract_text(file)
-
-        # Step 2: Split into clauses
         clauses_text = split_clauses(text)
 
         if not clauses_text:
-            raise HTTPException(status_code=400, detail="Could not extract clauses from document")
+            raise HTTPException(status_code=400, detail="Could not extract clauses")
 
         document_id = str(uuid.uuid4())
 
-        # Step 3: Classify risk for all clauses (fast, no network)
+        # Classify all clauses (sync, fast)
         classified = [
             (i, clause, *classify_risk(clause))
             for i, clause in enumerate(clauses_text, start=1)
         ]
 
-        # Step 4: Generate Urdu explanations CONCURRENTLY
-        # All Gemini calls fire at the same time instead of one by one
+        # Generate Urdu explanations concurrently
         async def process_one(i, clause, risk_level, clause_type):
-            urdu_explanation = await explain_urdu(clause, clause_type, risk_level)
+            urdu = await explain_urdu(clause, clause_type, risk_level)
             return {
                 "id": i,
                 "type": clause_type,
                 "risk": risk_level,
                 "original": clause,
-                "urdu": urdu_explanation,
+                "urdu": urdu,
                 "tooltip": _get_tooltip(risk_level, clause_type)
             }
 
@@ -55,7 +51,7 @@ async def analyze_document(file: UploadFile = File(...)):
             for i, clause, risk_level, clause_type in classified
         ]))
 
-        # Step 5: Create FAISS index
+        # Create FAISS index
         index_data = [
             {"id": r["id"], "type": r["type"], "risk": r["risk"],
              "original": r["original"], "urdu": r["urdu"]}
@@ -89,15 +85,15 @@ async def analyze_document(file: UploadFile = File(...)):
 
 def _get_tooltip(risk_level: str, clause_type: str):
     tooltips = {
-        ("high", "Termination"):      "Landlord can evict with minimal notice. Negotiate for 60+ days and specific conditions.",
-        ("high", "Arbitration"):      "You lose your right to civil court. This strongly favors the wealthier party.",
-        ("high", "Liability Waiver"): "Document move-in condition with photos. Landlord won't pay for structural defect damages.",
-        ("medium", "Payment & Penalty"): "Penalties can compound quickly. One missed month could cost 20%+ extra.",
-        ("medium", "Rent Increase"):  "Annual increases add up. Negotiate a cap of 8-10% per year.",
+        ("high", "Termination"):         "Landlord can evict with minimal notice. Negotiate for 60+ days.",
+        ("high", "Arbitration"):         "You lose your right to civil court. Strongly favors the wealthier party.",
+        ("high", "Liability Waiver"):    "Document move-in condition with photos. Landlord won't pay for structural damages.",
+        ("medium", "Payment & Penalty"): "Penalties compound quickly. One missed month could cost 20%+ extra.",
+        ("medium", "Rent Increase"):     "Annual increases add up. Negotiate a cap of 8-10% per year.",
     }
     key = (risk_level, clause_type)
     return tooltips.get(key) or (
         "Review this clause carefully before signing." if risk_level == "high"
-        else "Consider negotiating the terms." if risk_level == "medium"
+        else "Consider negotiating these terms." if risk_level == "medium"
         else None
     )

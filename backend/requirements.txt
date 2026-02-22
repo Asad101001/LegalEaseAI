@@ -25,6 +25,7 @@ google-auth-httplib2==0.3.0
 google-genai==1.64.0
 google-generativeai==0.8.6
 googleapis-common-protos==1.72.0
+groq==1.0.0
 grpcio==1.78.1
 grpcio-status==1.71.2
 h11==0.16.0
@@ -96,7 +97,7 @@ typing_extensions==4.15.0
 uritemplate==4.2.0
 urllib3==2.6.3
 uuid_utils==0.14.1
-uvicorn[standard]
+uvicorn==0.41.0
 websockets==15.0.1
 xxhash==3.6.0
 yarl==1.22.0

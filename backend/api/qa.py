@@ -1,22 +1,44 @@
-# api/qa.py
+"""
+api/qa.py
+
+Uses same priority as urdu_explainer.py:
+1. Groq (free, fast)
+2. Gemini (backup)
+"""
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from core.rag import retrieve
 from core.prompts import qa_prompt
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
 import asyncio
 import os
 import re
 
 load_dotenv()
 
-api_key = os.getenv("GEMINI_API_KEY")
-if not api_key:
-    raise ValueError("GEMINI_API_KEY not found in .env")
+GROQ_API_KEY   = os.getenv("GROQ_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-client = genai.Client(api_key=api_key)
+_groq_client   = None
+_gemini_client = None
+_GEMINI_CONFIG = None
+
+if GROQ_API_KEY:
+    try:
+        from groq import Groq
+        _groq_client = Groq(api_key=GROQ_API_KEY)
+    except Exception:
+        pass
+
+if GEMINI_API_KEY:
+    try:
+        from google import genai
+        from google.genai import types as genai_types
+        _gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+        _GEMINI_CONFIG = genai_types.GenerateContentConfig(
+            max_output_tokens=400, temperature=0.3)
+    except Exception:
+        pass
 
 router = APIRouter()
 
@@ -28,15 +50,6 @@ class QARequest(BaseModel):
 
 @router.post("/qa")
 async def ask_question(req: QARequest):
-    """
-    Process Q&A request using RAG + Gemini.
-    Flow:
-    1. Retrieve top-3 relevant clauses from FAISS
-    2. Build prompt with user question + clauses
-    3. Call Gemini API (async via run_in_executor)
-    4. Parse response (EN/UR/SOURCE/CONFIDENCE)
-    5. Return structured JSON for frontend
-    """
     if not req.question or not req.document_id:
         raise HTTPException(status_code=400, detail="question and document_id are required")
 
@@ -52,25 +65,25 @@ async def ask_question(req: QARequest):
             }
 
         prompt = qa_prompt(req.question, chunks)
+        response_text = None
 
-        loop = asyncio.get_event_loop()
-        response = await loop.run_in_executor(
-            None,
-            lambda: client.models.generate_content(
-                model="gemini-2.0-flash-lite",
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    max_output_tokens=400,
-                    temperature=0.3,
-                )
-            )
-        )
+        # Try Groq first
+        if _groq_client:
+            response_text = await _call_groq(prompt)
 
-        if not response or not response.text:
-            raise HTTPException(status_code=500, detail="Gemini returned an empty response")
+        # Fallback to Gemini
+        if not response_text and _gemini_client:
+            response_text = await _call_gemini(prompt)
 
-        answer_en, answer_ur, source, confidence = _parse_qa_response(response.text, chunks)
+        if not response_text:
+            return {
+                "answer_en": "AI service temporarily unavailable. Check your API keys in .env",
+                "answer_ur": "AI سروس عارضی طور پر دستیاب نہیں۔ .env فائل میں API key چیک کریں۔",
+                "source_clause": f"Clause {chunks[0]['id']} - {chunks[0]['type']}" if chunks else None,
+                "confidence": 0.0
+            }
 
+        answer_en, answer_ur, source, confidence = _parse_qa_response(response_text, chunks)
         return {
             "answer_en": answer_en,
             "answer_ur": answer_ur,
@@ -81,18 +94,42 @@ async def ask_question(req: QARequest):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Q&A processing failed: {str(e)[:200]}"
-        )
+        raise HTTPException(status_code=500, detail=f"Q&A failed: {str(e)[:200]}")
+
+
+async def _call_groq(prompt: str):
+    try:
+        loop = asyncio.get_event_loop()
+        resp = await loop.run_in_executor(None, lambda: _groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=400,
+            temperature=0.3,
+        ))
+        text = resp.choices[0].message.content
+        return text.strip() if text and text.strip() else None
+    except Exception as e:
+        print(f"[qa] Groq failed: {e}")
+        return None
+
+
+async def _call_gemini(prompt: str):
+    try:
+        loop = asyncio.get_event_loop()
+        resp = await loop.run_in_executor(None, lambda: _gemini_client.models.generate_content(
+            model="gemini-2.0-flash-lite",
+            contents=prompt,
+            config=_GEMINI_CONFIG,
+        ))
+        if resp and resp.text and resp.text.strip():
+            return resp.text.strip()
+        return None
+    except Exception as e:
+        print(f"[qa] Gemini failed: {e}")
+        return None
 
 
 def _parse_qa_response(response_text: str, chunks: list) -> tuple:
-    """
-    Parse Gemini response in format:
-    [ENGLISH] ... [URDU] ... [SOURCE] ... [CONFIDENCE] ...
-    Returns: (answer_en, answer_ur, source_clause, confidence)
-    """
     try:
         en_match   = re.search(r'\[ENGLISH\](.*?)\[URDU\]',      response_text, re.DOTALL)
         ur_match   = re.search(r'\[URDU\](.*?)\[SOURCE\]',       response_text, re.DOTALL)
@@ -104,7 +141,6 @@ def _parse_qa_response(response_text: str, chunks: list) -> tuple:
         source    = src_match.group(1).strip() if src_match else (
             f"Clause {chunks[0]['id']} - {chunks[0]['type']}" if chunks else None
         )
-
         confidence = 0.85
         if conf_match:
             try:
@@ -116,7 +152,6 @@ def _parse_qa_response(response_text: str, chunks: list) -> tuple:
                 confidence = 0.85
 
         return answer_en, answer_ur, source, confidence
-
     except Exception:
         return (
             response_text[:300] if response_text else "Could not process the answer.",
