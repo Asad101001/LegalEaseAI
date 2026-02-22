@@ -1,3 +1,4 @@
+# api/qa.py
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from core.rag import retrieve
@@ -17,11 +18,6 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-_QA_GEN_CONFIG = types.GenerateContentConfig(
-    max_output_tokens=400,
-    temperature=0.3,
-)
-
 router = APIRouter()
 
 
@@ -32,6 +28,15 @@ class QARequest(BaseModel):
 
 @router.post("/qa")
 async def ask_question(req: QARequest):
+    """
+    Process Q&A request using RAG + Gemini.
+    Flow:
+    1. Retrieve top-3 relevant clauses from FAISS
+    2. Build prompt with user question + clauses
+    3. Call Gemini API (async via run_in_executor)
+    4. Parse response (EN/UR/SOURCE/CONFIDENCE)
+    5. Return structured JSON for frontend
+    """
     if not req.question or not req.document_id:
         raise HTTPException(status_code=400, detail="question and document_id are required")
 
@@ -52,9 +57,12 @@ async def ask_question(req: QARequest):
         response = await loop.run_in_executor(
             None,
             lambda: client.models.generate_content(
-                model="gemini-1.5-flash",
+                model="gemini-1.5-flash-latest",
                 contents=prompt,
-                config=_QA_GEN_CONFIG,
+                config=types.GenerateContentConfig(
+                    max_output_tokens=400,
+                    temperature=0.3,
+                )
             )
         )
 
@@ -73,10 +81,18 @@ async def ask_question(req: QARequest):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Q&A processing failed: {str(e)[:200]}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Q&A processing failed: {str(e)[:200]}"
+        )
 
 
 def _parse_qa_response(response_text: str, chunks: list) -> tuple:
+    """
+    Parse Gemini response in format:
+    [ENGLISH] ... [URDU] ... [SOURCE] ... [CONFIDENCE] ...
+    Returns: (answer_en, answer_ur, source_clause, confidence)
+    """
     try:
         en_match   = re.search(r'\[ENGLISH\](.*?)\[URDU\]',      response_text, re.DOTALL)
         ur_match   = re.search(r'\[URDU\](.*?)\[SOURCE\]',       response_text, re.DOTALL)

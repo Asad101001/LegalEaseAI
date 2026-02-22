@@ -20,6 +20,11 @@ _GEN_CONFIG = types.GenerateContentConfig(
 
 
 async def explain_urdu(clause: str, clause_type: str = "", risk_level: str = "") -> str:
+    """
+    Generate a concise Urdu explanation for a legal clause.
+    Uses new google-genai SDK (google-generativeai is deprecated).
+    Wrapped in run_in_executor so it doesn't block FastAPI's event loop.
+    """
     if not clause or len(clause.strip()) < 20:
         return "یہ شق بہت مختصر ہے۔"
 
@@ -45,7 +50,7 @@ Provide ONLY the Urdu explanation, nothing else. Start directly with the explana
         response = await loop.run_in_executor(
             None,
             lambda: client.models.generate_content(
-                model="gemini-1.5-flash",
+                model="gemini-1.5-flash-latest",
                 contents=prompt,
                 config=_GEN_CONFIG,
             )
@@ -62,6 +67,7 @@ Provide ONLY the Urdu explanation, nothing else. Start directly with the explana
 
 
 def _fallback_urdu(risk_level: str) -> str:
+    """Return a safe fallback Urdu message if Gemini fails."""
     if risk_level == "high":
         return "یہ ایک خطرناک شق ہے۔ دستخط کرنے سے پہلے کسی ماہر سے مشورہ کریں۔"
     elif risk_level == "medium":
