@@ -9,7 +9,7 @@
  */
 'use strict';
 
-const API_BASE_URL = window.LEGALEASE_API_URL || 'http://127.0.0.1:8000';
+const API_BASE_URL = window.LEGALEASE_API_URL || 'https://legalease-backend.onrender.com';
 const USE_DEMO_MODE = false; // ← set true for demo fallback
 
 const _DEMO_CLAUSES = [
