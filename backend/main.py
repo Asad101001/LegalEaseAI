@@ -22,6 +22,7 @@ app.add_middleware(
         "http://localhost:5500",
         "http://127.0.0.1:5500",
         "https://legal-ease-ai-iota.vercel.app",
+        "https://legalease-backend-iovp.onrender.com",
         "*"
     ],
     allow_credentials=False,

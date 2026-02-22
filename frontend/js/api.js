@@ -9,7 +9,7 @@
  */
 'use strict';
 
-const API_BASE_URL = window.LEGALEASE_API_URL || 'https://legalease-backend.onrender.com';
+const API_BASE_URL = window.LEGALEASE_API_URL || 'https://legalease-backend-iovp.onrender.com';
 const USE_DEMO_MODE = false; // ← set true for demo fallback
 
 const _DEMO_CLAUSES = [
