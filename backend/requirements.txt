@@ -7,7 +7,7 @@ python-docx
 langchain-core
 langchain-text-splitters
 faiss-cpu
-sentence-transformers
+scikit-learn
 google-genai
 google-generativeai
 groq
