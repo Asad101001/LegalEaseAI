@@ -1,47 +1,29 @@
 from dotenv import load_dotenv
 import os
-import google.generativeai as genai
+import asyncio
+from google import genai
+from google.genai import types
 from fastapi import HTTPException
 
-# Load .env
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
 if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY not found in .env file")
 
-# Configure Gemini
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash")
+client = genai.Client(api_key=GEMINI_API_KEY)
 
-def explain_urdu(clause: str, clause_type: str = "", risk_level: str = "") -> str:
-    """
-    Generates a concise Urdu explanation for a legal clause.
-    Tailored for Pakistani citizens with practical advice.
-    
-    Args:
-        clause: The legal clause text
-        clause_type: Type of clause (e.g., "Termination")
-        risk_level: Risk level ("high", "medium", "safe")
-    
-    Returns:
-        Urdu explanation string
-    """
+_GEN_CONFIG = types.GenerateContentConfig(
+    max_output_tokens=150,
+    temperature=0.7,
+)
+
+
+async def explain_urdu(clause: str, clause_type: str = "", risk_level: str = "") -> str:
     if not clause or len(clause.strip()) < 20:
         return "یہ شق بہت مختصر ہے۔"
-    
-    try:
-        # Build risk context for better explanation
-        risk_context = ""
-        if risk_level == "high":
-            risk_context = "یہ ایک خطرناک شق ہے۔ براہ کرم توجہ دیں۔"
-        elif risk_level == "medium":
-            risk_context = "یہ شق احتیاط کی ضرورت ہے۔"
-        else:
-            risk_context = "یہ ایک محفوظ شق ہے۔"
-        
-        prompt = f"""You are a Pakistani legal assistant helping common citizens understand contracts in simple Urdu.
+
+    prompt = f"""You are a Pakistani legal assistant helping common citizens understand contracts in simple Urdu.
 
 Clause Type: {clause_type}
 Risk Level: {risk_level}
@@ -49,7 +31,7 @@ Risk Level: {risk_level}
 Explain this legal clause in VERY SIMPLE, SHORT Urdu (2-3 sentences max):
 - Use everyday language that a farmer or shopkeeper can understand
 - Add ONE practical tip for what to do
-- Include the risk warning if applicable
+- Include a risk warning if risk level is high
 - NO English words (use pure Urdu)
 - NO legal jargon
 
@@ -58,19 +40,30 @@ Clause:
 
 Provide ONLY the Urdu explanation, nothing else. Start directly with the explanation."""
 
-        response = model.generate_content(
-            prompt,
-            generation_config=genai.types.GenerationConfig(
-                max_output_tokens=150,
-                temperature=0.7,
+    try:
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(
+            None,
+            lambda: client.models.generate_content(
+                model="gemini-1.5-flash",
+                contents=prompt,
+                config=_GEN_CONFIG,
             )
         )
-        
+
         if not response or not response.text:
-            return f"{risk_context} براہ کرم اس شق کو احتیاط سے پڑھیں۔"
-        
+            return _fallback_urdu(risk_level)
+
         return response.text.strip()
-        
+
     except Exception as e:
-        # Fallback if API fails
-        return f"خرابی: {str(e)[:50]}. براہ کرم اس شق کو دوبارہ چیک کریں۔"
+        print(f"[urdu_explainer] Gemini call failed: {e}")
+        return _fallback_urdu(risk_level)
+
+
+def _fallback_urdu(risk_level: str) -> str:
+    if risk_level == "high":
+        return "یہ ایک خطرناک شق ہے۔ دستخط کرنے سے پہلے کسی ماہر سے مشورہ کریں۔"
+    elif risk_level == "medium":
+        return "یہ شق احتیاط کی ضرورت ہے۔ اس کو غور سے پڑھیں۔"
+    return "یہ ایک محفوظ شق ہے۔"

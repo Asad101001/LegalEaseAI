@@ -1,6 +1,13 @@
 /**
  * app.js - LegalEase AI Frontend Logic
  * All UI interactions. API calls go through window.LegalEaseAPI (api.js).
+ *
+ * FIXES:
+ * 1. initApp() no longer calls analyzeDocument() on startup in live mode
+ *    (was causing 422 - fake object hitting real API, overwriting real results)
+ * 2. Added syncQASidebar() to update Q&A sidebar doc name after upload
+ * 3. Added clearQAMessages() to remove hardcoded demo messages after upload
+ * 4. sendMessage() now shows a proper error if no document is loaded
  */
 'use strict';
 
@@ -30,18 +37,16 @@ function showPage(name) {
 function triggerPageAnimations(name) {
   const page = document.getElementById('page-' + name);
   if (!page) return;
-  page.querySelectorAll('.anim-fade-up, .anim-fade-in, .anim-slide-left, .anim-slide-right, .anim-scale-in, .anim-stagger-child').forEach(el => {
+  page.querySelectorAll('.anim-fade-up, .anim-fade-in, .anim-slide-left, .anim-slide-right, .anim-scale-in').forEach(el => {
     el.style.animationPlayState = 'paused';
     void el.offsetWidth;
     el.style.animationPlayState = 'running';
   });
-  // Animate counters on report page
   if (name === 'report') animateCounters();
 }
 
 // ─── MOBILE MENU ──────────────────────────────────────────────
 function toggleMobileMenu() {
-  const m = document.querySelector('.mobile-menu.active-menu');
   document.querySelectorAll('.mobile-menu').forEach(menu => {
     if (menu.closest(`#page-${state.currentPage}`)) {
       menu.classList.toggle('open');
@@ -63,24 +68,28 @@ function handleFileSelect(file) {
   }
 
   state.documentName = file.name;
-  setUploadLoading(true, file.name);
+  setUploadLoading(true);
 
   window.LegalEaseAPI.analyzeDocument(file)
     .then(data => {
-      state.documentId = data.document_id;
-      state.clauses    = data.clauses;
+      state.documentId   = data.document_id;
+      state.documentName = data.document_name || file.name;
+      state.clauses      = data.clauses;
       renderAnalysisPage();
-      showPage('analysis');
+      syncQASidebar();
+      clearQAMessages();
       setUploadLoading(false);
-      showToast(`"${file.name}" analyzed successfully. ${data.clauses.length} clauses detected.`, 'success');
+      showPage('analysis');
+      showToast(`"${state.documentName}" analyzed. ${data.clauses.length} clauses detected.`, 'success');
     })
     .catch(err => {
       setUploadLoading(false);
-      showToast('Analysis failed: ' + err.message, 'error');
+      showToast('Analysis failed: ' + (err.message || 'Unknown error'), 'error');
+      console.error('[handleFileSelect]', err);
     });
 }
 
-function setUploadLoading(loading, filename) {
+function setUploadLoading(loading) {
   const btn = document.getElementById('upload-btn');
   const dz  = document.getElementById('drop-zone');
   if (loading) {
@@ -101,23 +110,23 @@ function startProgressBar() {
   bar.parentElement.style.display = 'block';
   let w = 0;
   bar._interval = setInterval(() => {
-    w = Math.min(w + Math.random() * 12, 88);
+    w = Math.min(w + Math.random() * 10, 88);
     bar.style.width = w + '%';
-  }, 250);
+  }, 300);
 }
 function stopProgressBar() {
   const bar = document.getElementById('upload-progress-bar');
   if (!bar) return;
   clearInterval(bar._interval);
   bar.style.width = '100%';
-  setTimeout(() => { bar.style.width = '0%'; bar.parentElement.style.display = 'none'; }, 400);
+  setTimeout(() => { bar.style.width = '0%'; bar.parentElement.style.display = 'none'; }, 500);
 }
 
 // ─── ANALYSIS RENDER ──────────────────────────────────────────
 function renderAnalysisPage() {
   updateDocMeta();
-  state.activeFilter = 'all';
-  state.searchQuery  = '';
+  state.activeFilter       = 'all';
+  state.searchQuery        = '';
   state.currentClauseIndex = 0;
   const s = document.getElementById('clause-search');
   if (s) s.value = '';
@@ -131,16 +140,21 @@ function updateDocMeta() {
   const high = state.clauses.filter(c => c.risk === 'high').length;
   const med  = state.clauses.filter(c => c.risk === 'medium').length;
   const safe = state.clauses.filter(c => c.risk === 'safe').length;
-  const name = state.documentName || 'Sample_Document.pdf';
-  _set('doc-name-display', name);
-  _set('doc-meta-display', `${state.clauses.length} clauses detected - ${high} high risk - ${med} medium risk`);
-  _set('report-doc-name', name.replace(/\.[^.]+$/, '').replace(/_/g, ' '));
-  _set('report-total',  state.clauses.length);
-  _set('report-total-2',state.clauses.length);
-  _set('report-high',   high);
-  _set('report-med',    med);
-  _set('report-safe',   safe);
-  _set('report-date',   new Date().toLocaleDateString('en-PK', { day: 'numeric', month: 'long', year: 'numeric' }));
+  const name = state.documentName || 'Document';
+  _set('doc-name-display',  name);
+  _set('doc-meta-display',  `${state.clauses.length} clauses detected · ${high} high risk · ${med} medium risk`);
+  _set('report-doc-name',   name.replace(/\.[^.]+$/, '').replace(/_/g, ' '));
+  _set('report-total',      state.clauses.length);
+  _set('report-total-2',    state.clauses.length);
+  _set('report-high',       high);
+  _set('report-med',        med);
+  _set('report-safe',       safe);
+  _set('report-date',       new Date().toLocaleDateString('en-PK', { day: 'numeric', month: 'long', year: 'numeric' }));
+  // update data-target attributes for counter animation
+  ['report-total-2','report-high','report-med','report-safe'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.dataset.target = el.textContent;
+  });
 }
 function _set(id, val) { const e = document.getElementById(id); if (e) e.textContent = val; }
 
@@ -213,7 +227,7 @@ function renderReportTable() {
     <tr class="anim-fade-up">
       <td>${String(c.id).padStart(2,'0')}</td>
       <td>${c.type}</td>
-      <td class="urdu-cell">${c.urdu.split('.')[0].trim()}.</td>
+      <td class="urdu-cell">${c.urdu ? c.urdu.split('.')[0].trim() + '.' : '-'}</td>
       <td><span class="risk-badge-sm ${c.risk}">${RISK_LABELS[c.risk]}</span></td>
     </tr>`).join('');
 }
@@ -233,6 +247,23 @@ function selectClauseById(id, el) {
 function selectClause(el) {
   document.querySelectorAll('.clause-orig').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
+}
+
+// ─── Q&A SIDEBAR SYNC ─────────────────────────────────────────
+// Called after every successful upload to update sidebar info
+function syncQASidebar() {
+  const high = state.clauses.filter(c => c.risk === 'high').length;
+  const med  = state.clauses.filter(c => c.risk === 'medium').length;
+  const nameEl = document.getElementById('qa-doc-name-live');
+  const statEl = document.getElementById('qa-doc-stat-live');
+  if (nameEl) nameEl.textContent = state.documentName || 'Document';
+  if (statEl) statEl.textContent = `${state.clauses.length} clauses · ${high} high risk · ${med} medium`;
+}
+
+// Clear hardcoded demo messages from qa.html on real upload
+function clearQAMessages() {
+  const msgs = document.getElementById('qa-messages');
+  if (msgs) msgs.innerHTML = '';
 }
 
 // ─── FILTER & SEARCH ──────────────────────────────────────────
@@ -270,6 +301,13 @@ async function sendMessage() {
   const input = document.getElementById('qa-input');
   const q = input?.value.trim();
   if (!q) return;
+
+  // Guard: must have a real document loaded
+  if (!state.documentId) {
+    showToast('Please upload a document first before asking questions.', 'error');
+    return;
+  }
+
   const msgs = document.getElementById('qa-messages');
   if (!msgs) return;
 
@@ -290,7 +328,13 @@ async function sendMessage() {
     appendAIMsg(msgs, data.answer_en, data.answer_ur, data.source_clause);
   } catch (err) {
     document.getElementById(tid)?.remove();
-    appendAIMsg(msgs, 'Connection error. Please try again.', 'رابطہ نہیں ہو سکا۔ دوبارہ کوشش کریں۔', null);
+    const errText = err.message || 'Unknown error';
+    appendAIMsg(msgs,
+      `Error: ${errText}`,
+      'خرابی پیش آگئی۔ دوبارہ کوشش کریں۔',
+      null
+    );
+    console.error('[sendMessage]', err);
   }
 }
 
@@ -308,7 +352,7 @@ function appendAIMsg(c, en, ur, source) {
       <div class="msg-avatar ai">AI</div>
       <div class="msg-bubble ai">
         <strong>Based on your document:</strong> ${en}
-        <div class="urdu-reply">${ur}</div>
+        ${ur ? `<div class="urdu-reply">${ur}</div>` : ''}
         ${source ? `<div class="related-clause">📎 ${source}</div>` : ''}
       </div>
     </div>`);
@@ -317,19 +361,24 @@ function appendAIMsg(c, en, ur, source) {
 
 // ─── REPORT ───────────────────────────────────────────────────
 async function triggerDownloadReport() {
+  if (!state.documentId) {
+    showToast('Please upload a document first.', 'error');
+    return;
+  }
   try {
+    showToast('Generating PDF report...', 'info');
     await window.LegalEaseAPI.downloadReport(state.documentId, state.documentName);
   } catch (err) {
-    showToast('Download failed: ' + err.message, 'error');
+    showToast('Download failed: ' + (err.message || 'Unknown error'), 'error');
   }
 }
 
 // ─── COUNTER ANIMATION ────────────────────────────────────────
 function animateCounters() {
   document.querySelectorAll('.insight-num[data-target]').forEach(el => {
-    const target = parseInt(el.dataset.target, 10);
+    const target = parseInt(el.dataset.target, 10) || 0;
     let current = 0;
-    const step = Math.ceil(target / 20);
+    const step = Math.max(1, Math.ceil(target / 20));
     const iv = setInterval(() => {
       current = Math.min(current + step, target);
       el.textContent = current;
@@ -363,10 +412,14 @@ function attachDropZone() {
     e.preventDefault(); dz.classList.remove('dragover');
     handleFileSelect(e.dataTransfer.files[0]);
   });
-  fi?.addEventListener('change', e => handleFileSelect(e.target.files[0]));
+  fi?.addEventListener('change', e => {
+    handleFileSelect(e.target.files[0]);
+    // Reset input so same file can be re-uploaded if needed
+    e.target.value = '';
+  });
 }
 
-// ─── INTERSECTION OBSERVER (scroll-triggered anims) ───────────
+// ─── SCROLL ANIMATIONS ────────────────────────────────────────
 function initScrollAnimations() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -376,25 +429,27 @@ function initScrollAnimations() {
       }
     });
   }, { threshold: 0.12 });
-
   document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
 }
 
 // ─── INIT ─────────────────────────────────────────────────────
 function initApp() {
-  // Pre-load demo data so Demo nav works immediately
-  state.clauses      = window.LegalEaseAPI ? [] : [];
-  state.documentName = 'Rental_Agreement_Karachi_2024.pdf';
-  state.documentId   = 'demo-preload';
+  // Always start clean - no fake API calls
+  state.clauses      = [];
+  state.documentName = null;
+  state.documentId   = null;
 
-  // Pre-render with demo data
-  if (window.LegalEaseAPI) {
+  // Only pre-load demo data when explicitly in demo mode
+  if (window.LegalEaseAPI && window.LegalEaseAPI.USE_DEMO_MODE === true) {
     window.LegalEaseAPI.analyzeDocument({ name: 'Rental_Agreement_Karachi_2024.pdf', size: 1000, type: 'application/pdf' })
       .then(data => {
-        state.clauses     = data.clauses;
-        state.documentId  = data.document_id;
+        state.clauses      = data.clauses;
+        state.documentId   = data.document_id;
+        state.documentName = data.document_name;
         renderAnalysisPage();
-      });
+        syncQASidebar();
+      })
+      .catch(err => console.warn('[initApp demo preload]', err));
   }
 
   attachDropZone();
@@ -413,12 +468,10 @@ function initApp() {
   });
 
   initScrollAnimations();
-
-  // Start on home
   showPage('home');
 }
 
-// Globals
+// ─── GLOBALS ──────────────────────────────────────────────────
 Object.assign(window, {
   showPage, selectClause, fillQuestion, sendMessage,
   setActiveFilter, navigateClause, handleSearch,
