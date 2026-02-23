@@ -1,0 +1,442 @@
+# LegalEase AI — API Reference
+
+> Complete reference for all backend endpoints. Includes request/response schemas, error codes, example payloads, and integration notes.
+
+**Base URL (local):** `http://localhost:8000`  
+**Base URL (deployed):** `https://legalease-backend-iovp.onrender.com`  
+**API version:** `1.0.0`
+
+---
+
+## Table of Contents
+
+1. [Authentication](#authentication)
+2. [Common Error Format](#common-error-format)
+3. [Health Endpoints](#health-endpoints)
+4. [POST /api/analyze](#post-apianalyze)
+5. [POST /api/qa](#post-apiqa)
+6. [GET /api/report/{document_id}](#get-apireportdocument_id)
+7. [Risk Levels Reference](#risk-levels-reference)
+8. [Clause Types Reference](#clause-types-reference)
+9. [Rate Limits and Quotas](#rate-limits-and-quotas)
+10. [Frontend Integration Notes](#frontend-integration-notes)
+
+---
+
+## Authentication
+
+No authentication is required on any endpoint in the current version. All endpoints are open.
+
+For production deployment, adding an `X-API-Key` header check via FastAPI middleware is recommended before exposing this to the public internet.
+
+---
+
+## Common Error Format
+
+All errors follow this structure:
+
+```json
+{
+  "detail": "Human-readable error message"
+}
+```
+
+For 500-level errors:
+
+```json
+{
+  "error": "Internal Server Error",
+  "message": "Short description (max 100 chars)",
+  "error_id": "abc123"
+}
+```
+
+For validation errors (422):
+
+```json
+{
+  "error": "Validation Error",
+  "message": "Invalid request data",
+  "details": [
+    {
+      "loc": ["body", "document_id"],
+      "msg": "field required",
+      "type": "value_error.missing"
+    }
+  ]
+}
+```
+
+---
+
+## Health Endpoints
+
+### `GET /`
+
+Returns service status. Use this to verify the backend is running before making analysis requests.
+
+**Response `200 OK`:**
+```json
+{
+  "status": "running",
+  "service": "LegalEase AI Backend",
+  "version": "1.0.0",
+  "message": "API is operational"
+}
+```
+
+### `GET /health`
+
+Lightweight health check for uptime monitors.
+
+**Response `200 OK`:**
+```json
+{
+  "status": "ok"
+}
+```
+
+---
+
+## POST /api/analyze
+
+Upload a legal document for full analysis. Returns extracted clauses, risk classifications, Urdu explanations, and a document ID for subsequent Q&A and report requests.
+
+### Request
+
+**Content-Type:** `multipart/form-data`
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `file` | File | Yes | The document to analyze. Max 10MB. |
+
+**Accepted file types:**
+- `.pdf` — extracted via pdfplumber
+- `.docx`, `.doc` — extracted via python-docx
+- `.txt` — extracted with multi-encoding fallback (UTF-8 → UTF-16 → Latin-1 → CP1252 → ISO-8859-1)
+
+**Example (curl):**
+```bash
+curl -X POST http://localhost:8000/api/analyze \
+  -F "file=@rental_agreement.pdf"
+```
+
+**Example (JavaScript):**
+```javascript
+const formData = new FormData();
+formData.append('file', file); // file is a File object from <input>
+
+const response = await fetch('http://localhost:8000/api/analyze', {
+  method: 'POST',
+  body: formData
+});
+const data = await response.json();
+```
+
+### Response `200 OK`
+
+```json
+{
+  "document_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "document_name": "rental_agreement.pdf",
+  "clauses": [
+    {
+      "id": 1,
+      "type": "Termination",
+      "risk": "high",
+      "original": "The landlord reserves the right to terminate this agreement with 7 days written notice for any reason deemed appropriate at their sole discretion.",
+      "urdu": "مالک مکان بغیر کسی خاص وجہ کے صرف 7 دن کے نوٹس پر آپ کو گھر خالی کروا سکتا ہے۔ یہ آپ کے لیے انتہائی نقصان دہ ہے۔",
+      "tooltip": "Landlord can evict with only 7 days notice. Negotiate for minimum 60 days."
+    },
+    {
+      "id": 2,
+      "type": "Payment & Penalty",
+      "risk": "medium",
+      "original": "Late payment shall incur a 5% weekly penalty on the outstanding amount.",
+      "urdu": "اگر کرایہ دیر سے دیا تو ہر ہفتے 5 فیصد جرمانہ لگے گا۔",
+      "tooltip": "5% weekly penalty compounded monthly. One missed month could cost 20%+ extra."
+    },
+    {
+      "id": 3,
+      "type": "Maintenance",
+      "risk": "safe",
+      "original": "The landlord shall be responsible for all structural repairs exceeding PKR 10,000.",
+      "urdu": "10,000 روپے سے اوپر کی تمام مرمت مالک مکان کی ذمہ داری ہے۔",
+      "tooltip": null
+    }
+  ],
+  "summary": {
+    "total_clauses": 8,
+    "high_risk": 3,
+    "medium_risk": 2,
+    "safe_risk": 3
+  }
+}
+```
+
+### Clause Object Schema
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | integer | Sequential clause number starting at 1 |
+| `type` | string | Detected clause type (see [Clause Types Reference](#clause-types-reference)) |
+| `risk` | string | `"high"`, `"medium"`, or `"safe"` |
+| `original` | string | Raw extracted text from the document |
+| `urdu` | string | Plain Urdu explanation generated by LLM |
+| `tooltip` | string \| null | Actionable English tip for the user. `null` for safe clauses. |
+
+### Error Responses
+
+| Status | When | Example `detail` |
+|---|---|---|
+| `400` | No file provided | `"No file provided"` |
+| `400` | Unsupported file type | `"Unsupported file format. Use PDF, DOCX, DOC, or TXT"` |
+| `400` | Text too short | `"Document is too short. Provide at least 100 characters."` |
+| `400` | Empty PDF (scanned image) | `"PDF contains no extractable text. Scanned images need OCR."` |
+| `400` | No clauses found | `"Could not extract clauses"` |
+| `413` | File exceeds 10MB | `"File exceeds 10MB limit"` |
+| `500` | Unexpected server error | `"Analysis failed: <short description>"` |
+
+---
+
+## POST /api/qa
+
+Ask a question about a previously analyzed document. The backend retrieves the most relevant clauses via FAISS similarity search and generates a bilingual answer (English + Urdu).
+
+### Request
+
+**Content-Type:** `application/json`
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `question` | string | Yes | Question in Urdu or English |
+| `document_id` | string | Yes | UUID returned by `/api/analyze` |
+
+**Example:**
+```json
+{
+  "question": "کیا مالک مکان مجھے بغیر وجہ نکال سکتا ہے؟",
+  "document_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+}
+```
+
+**Example (curl):**
+```bash
+curl -X POST http://localhost:8000/api/qa \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What happens if I pay rent late?", "document_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479"}'
+```
+
+### Response `200 OK`
+
+```json
+{
+  "answer_en": "If you pay rent late, a 5% weekly penalty is charged on the outstanding amount, compounded monthly. One month late can cost you 20% or more in additional fees.",
+  "answer_ur": "اگر آپ نے کرایہ وقت پر نہیں دیا تو ہر ہفتے 5 فیصد جرمانہ لگے گا۔ ایک مہینے کی تاخیر میں 20 فیصد سے زیادہ اضافی رقم بن سکتی ہے۔",
+  "source_clause": "Clause 2 - Payment & Penalty",
+  "confidence": 0.91
+}
+```
+
+### Response Schema
+
+| Field | Type | Description |
+|---|---|---|
+| `answer_en` | string | English answer grounded in document clauses |
+| `answer_ur` | string | Urdu translation of the answer |
+| `source_clause` | string \| null | Which clause(s) the answer is based on |
+| `confidence` | float | LLM-reported confidence score between 0.0 and 1.0 |
+
+### No Relevant Clauses Found
+
+If FAISS search returns no relevant chunks (empty index), the endpoint returns `200` with a message rather than an error:
+
+```json
+{
+  "answer_en": "No relevant clauses found in the document for this question.",
+  "answer_ur": "آپ کے سوال کے لیے دستاویز میں متعلقہ شق نہیں ملی۔",
+  "source_clause": null,
+  "confidence": 0.0
+}
+```
+
+### LLM Unavailable
+
+If both Groq and Gemini are unavailable (quota exhausted, network error, keys missing):
+
+```json
+{
+  "answer_en": "AI service temporarily unavailable. Check your API keys in .env",
+  "answer_ur": "AI سروس عارضی طور پر دستیاب نہیں۔ .env فائل میں API key چیک کریں۔",
+  "source_clause": "Clause 2 - Payment & Penalty",
+  "confidence": 0.0
+}
+```
+
+### Error Responses
+
+| Status | When | Example `detail` |
+|---|---|---|
+| `400` | Missing question or document_id | `"question and document_id are required"` |
+| `404` | Document not found on server | `"Document f47ac10b not found. Please re-upload and analyze the document."` |
+| `500` | Unexpected error | `"Q&A failed: <short description>"` |
+
+> **Note:** The document index is stored in memory/disk on the backend. If the backend restarts, all document indexes are lost and the `document_id` from a previous session will return 404. The user must re-upload the document.
+
+---
+
+## GET /api/report/{document_id}
+
+Generate and download a PDF risk analysis report for a previously analyzed document.
+
+### Path Parameter
+
+| Parameter | Type | Description |
+|---|---|---|
+| `document_id` | string | UUID returned by `/api/analyze` |
+
+**Example:**
+```bash
+curl -OJ http://localhost:8000/api/report/f47ac10b-58cc-4372-a567-0e02b2c3d479
+```
+
+**Example (JavaScript):**
+```javascript
+const response = await fetch(`http://localhost:8000/api/report/${documentId}`);
+const blob = await response.blob();
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = 'LegalEase_Report.pdf';
+a.click();
+URL.revokeObjectURL(url);
+```
+
+### Response `200 OK`
+
+Binary PDF file.
+
+| Header | Value |
+|---|---|
+| `Content-Type` | `application/pdf` |
+| `Content-Disposition` | `attachment; filename=LegalEase_Report_{id[:8]}.pdf` |
+
+### Report Contents
+
+The PDF includes:
+- Document title, generation date, document ID
+- Summary statistics: total clauses, high/medium/safe counts
+- Detailed clause table with ID, type, risk level, and status indicator
+
+> **Current limitation:** The PDF report renders English text only. Urdu text in ReportLab requires `arabic-reshaper` and `python-bidi` — this is a planned improvement. The in-browser report page (`/report`) shows full Urdu content.
+
+### Error Responses
+
+| Status | When | Example `detail` |
+|---|---|---|
+| `404` | Document not found | `"Document f47ac10b not found"` |
+| `400` | Document has no clauses | `"No clauses found in document"` |
+| `500` | PDF generation failed | `"PDF generation failed: <description>"` |
+
+---
+
+## Risk Levels Reference
+
+| Level | Color | Meaning | Recommended Action |
+|---|---|---|---|
+| `high` | 🔴 Red | Clause poses significant risk to the signer | Negotiate to remove or modify before signing |
+| `medium` | 🟡 Yellow | Clause requires attention and could become problematic | Understand implications fully, consider negotiating |
+| `safe` | 🟢 Green | Standard clause, no unusual risk | Proceed normally |
+
+---
+
+## Clause Types Reference
+
+These are the eight clause types the risk classifier can detect:
+
+| Type | Risk | Description |
+|---|---|---|
+| `Termination` | high | Clauses about ending the agreement, eviction notice periods |
+| `Arbitration` | high | Clauses that remove the right to civil court proceedings |
+| `Liability Waiver` | high | Clauses that absolve one party of responsibility for damages |
+| `Payment & Penalty` | medium | Late payment fees, penalties, compounding charges |
+| `Rent Increase` | medium | Annual rent escalation percentages and conditions |
+| `Maintenance` | safe | Responsibility for structural repairs and upkeep |
+| `Security Deposit` | safe | Deposit amount, conditions for deduction, return timeline |
+| `Subletting` | safe | Conditions for sharing or subletting the property |
+
+If a clause does not match any of the eight types, it is classified as `General Clause` with a risk level based on modal verb detection (`shall`, `must`, `may not` → `medium`, otherwise `safe`).
+
+---
+
+## Rate Limits and Quotas
+
+LegalEase AI uses third-party LLM APIs under their free tiers. These limits are per Google/Groq account and project, not per user of this app.
+
+### Groq (Primary)
+| Limit | Value |
+|---|---|
+| Requests per minute | 30 |
+| Requests per day | 14,400 |
+| Tokens per minute | 6,000 |
+| Model | `llama-3.3-70b-versatile` |
+
+### Google Gemini (Fallback)
+| Limit | Value |
+|---|---|
+| Requests per minute | 15 |
+| Requests per day | ~1,500 |
+| Model | `gemini-2.0-flash-lite` |
+
+**If quota is exhausted:** The `/api/analyze` endpoint still returns 200 but Urdu explanations will be static fallback strings. The `/api/qa` endpoint will return the "AI service unavailable" response. Both behaviors are handled gracefully in the frontend.
+
+**To reset:** Groq quota resets every minute and every day at midnight UTC. Gemini quota resets at midnight Pacific Time.
+
+---
+
+## Frontend Integration Notes
+
+### CORS
+
+The backend allows the following origins:
+
+```python
+allow_origins = [
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "https://legal-ease-ai-iota.vercel.app",
+    "https://legalease-backend-iovp.onrender.com",
+    "*"
+]
+```
+
+The wildcard `"*"` is included for development convenience. For production, remove it and list only your frontend domain.
+
+### Base URL Configuration
+
+In `frontend/js/api.js`, the backend URL is read from a global variable or falls back to the deployed URL:
+
+```javascript
+const API_BASE_URL = window.LEGALEASE_API_URL || 'https://legalease-backend-iovp.onrender.com';
+```
+
+To point at a local backend during development, add this before the script tags in `index.html`:
+
+```html
+<script>window.LEGALEASE_API_URL = 'http://localhost:8000';</script>
+```
+
+### Demo Mode
+
+Setting `USE_DEMO_MODE = true` in `api.js` bypasses all backend calls and returns hardcoded sample data. This is useful for frontend development without running the backend. The demo dataset simulates an 8-clause Karachi rental agreement.
+
+### Document ID Lifecycle
+
+```
+1. User uploads file
+2. Frontend receives document_id from /api/analyze
+3. document_id stored in state.documentId + sessionStorage
+4. Q&A requests use document_id from state
+5. Report requests use document_id from state
+6. Backend restart → document_id invalid → user must re-upload
+```
