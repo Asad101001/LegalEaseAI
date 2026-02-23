@@ -6,7 +6,7 @@
 ██║     █████╗  ██║  ███╗███████║██║     █████╗  ███████║███████╗█████╗  
 ██║     ██╔══╝  ██║   ██║██╔══██║██║     ██╔══╝  ██╔══██║╚════██║██╔══╝  
 ███████╗███████╗╚██████╔╝██║  ██║███████╗███████╗██║  ██║███████║███████╗
-╚══════╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝
+ ╚══════╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝
                                                                     A I
 ```
 
@@ -110,8 +110,8 @@ Upload any legal document → get instant, plain-Urdu explanations of every clau
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/Asad101001/legalease-ai.git
-cd legalease-ai
+git clone https://github.com/Asad101001/LegalEaseAI.git
+cd LegalEaseAI
 ```
 
 ### 2. Set up the backend
@@ -185,7 +185,7 @@ Drop any PDF, DOCX, or TXT legal document into the upload card. The analysis tak
 
 
 ```
-legalease-ai/
+LegalEaseAI/
 │
 ├── backend/
 │   ├── api/
@@ -354,16 +354,32 @@ Download the full PDF risk report.
 
 ---
 
+
 ## 📄 License
 
 MIT — do whatever you want with it. Just don't use it to write unfair contracts.
 
 ---
 
+
+## 🎥 Demo
+
 <div align="center">
+
+![demo](https://github.com/user-attachments/assets/9f4ff2f2-9efe-41cd-9679-103d5cd9d660)
+
+</div>
+
+---
+
+<div align="center">
+
+<br>
+<br>
 
 **Built with ❤️ for Pakistan · Hackathon for HEC Generative AI Training Cohort 2**
 
 *قانونی دستاویزات کو سمجھنا اب مشکل نہیں*
+
 
 </div>
